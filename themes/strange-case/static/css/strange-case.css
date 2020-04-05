@@ -235,8 +235,14 @@ p.attr {
 .scheme-darkbrown .sidebar a {
 	color: #99cc99;
 }
+.scheme-darkbrown .sidebar a:visited {
+	color: #77aa77;
+}
 .scheme-darkbrown .content a {
-	color: #2d2d2d;
+	color: #336633;
+}
+.scheme-darkbrown .content a:visited {
+	color: #003300;
 }
 .scheme-darkbrown .post .post-heading span {
 	color: #9a9a9a;
