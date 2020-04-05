@@ -2,6 +2,8 @@ baseURL = "https://movementarian.org/blog/"
 publishdir = "/home/movement/movementarian.org/blog/"
 languageCode = "en-us"
 title = "Staring at the C"
+pygmentsCodefences = true
+pygmentsStyle = "pygments"
 theme = "strange-case"
 [params]
  description = "John Levon's blog"
