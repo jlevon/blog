@@ -17,6 +17,18 @@
  *
 */
 
+/* adjustments */
+
+.prevpost {
+	float: left;
+	text-decoration: underline;
+}
+
+.nextpost {
+	float: right;
+	text-decoration: underline;
+}
+
 
 /* DEFAULTS */
 
@@ -209,7 +221,7 @@ p.attr {
 
 /* Dark Brown Scheme */
 .scheme-darkbrown .sidebar {
-	background-color: #2d2d2d;
+	background-color: #4d4d4d;
 	color: #f2f0ec;
 }
 .scheme-darkbrown .sidebar h1 {

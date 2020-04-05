@@ -3,6 +3,7 @@
 
 		<a href="{{ .Site.BaseURL }}"><h1>{{ .Site.Title }}</h1></a>
 		<p>{{ .Site.Params.description }}</p>
+		<img src="/blog/john.jpg" />
 
 		<div class="sidebar-freetext">
 			{{ .Site.Params.sidebarFreeText }}<br/>
@@ -21,7 +22,7 @@
 		<div class="sidebar-recent hidden-xs">
 			<p>Recent Posts:</p>
 			<ul>
-				{{ range first 10 .Site.Pages }}
+				{{ range first 10 (where .Site.RegularPages "Section" "posts") }}
 				<li><a href="{{.Permalink}}">{{ .Title }}</a></li>
 				{{ end }}
 			</ul>
