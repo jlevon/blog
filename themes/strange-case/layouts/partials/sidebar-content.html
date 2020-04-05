@@ -4,11 +4,13 @@
 		<a href="{{ .Site.BaseURL }}"><h1>{{ .Site.Title }}</h1></a>
 		<p>{{ .Site.Params.description }}</p>
 
-		{{ if .Site.Params.sidebarFreeText }}
 		<div class="sidebar-freetext">
-			<p>{{ .Site.Params.sidebarFreeText }}</p>
+			{{ .Site.Params.sidebarFreeText }}<br/>
+<a href="https://github.com/jlevon/">github</a> |
+<a href="https://twitter.com/johnlevon">twitter</a> |
+<a href="mailto:levon@movementarian.org">email</a> |
+<a href="https://blog.movementarian.org/feeds/posts/default">RSS</a>
 		</div>
-		{{ end }}
 
 		<ul class="sidebar-menus">
 			{{ range .Site.Menus.main }}
