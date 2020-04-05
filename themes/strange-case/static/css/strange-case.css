@@ -22,11 +22,13 @@
 .prevpost {
 	float: left;
 	text-decoration: underline;
+	font-family: Roboto, sans-serif;
 }
 
 .nextpost {
 	float: right;
 	text-decoration: underline;
+	font-family: Roboto, sans-serif;
 }
 
 
@@ -41,7 +43,6 @@ h1, h2, h3, h4 {
 }
 p {
 	font-family: Roboto, sans-serif;
-	font-size: 1.2em;
 }
 img {
 	max-width:100%;
