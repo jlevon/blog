@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Staring at the C</title>
+    <link>https://movementarian.org/blog/</link>
+    <description>Recent content on Staring at the C</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 05 Apr 2020 10:15:12 +0000</lastBuildDate>
+    
+	<atom:link href="https://movementarian.org/blog/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>My First Post</title>
+      <link>https://movementarian.org/blog/posts/my-first-post/</link>
+      <pubDate>Sun, 05 Apr 2020 10:15:12 +0000</pubDate>
+      
+      <guid>https://movementarian.org/blog/posts/my-first-post/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

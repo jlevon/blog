@@ -1,0 +1,9 @@
+baseURL = "https://movementarian.org/blog/"
+publishdir = "/home/movement/movementarian.org/blog/"
+languageCode = "en-us"
+title = "Staring at the C"
+theme = "strange-case"
+[params]
+ description = "John Levon's blog"
+ sidebarFreeText = "I'm a systems software engineer living in Manchester, England."
+ colorScheme = "scheme-darkbrown"
