@@ -101,7 +101,9 @@ img {
 
 
 .sidebar {
+/*
 	padding: 1em;
+*/
 	font-size: 1.1em;
 	text-align: left;
 }
@@ -151,13 +153,18 @@ img {
 		position: fixed;
 	}
 	.sidebar-content {
-		/*bottom: 1em; */
+/*
+	Disabled "bottom" so the sidebar doesn't stick to the bottom.
+	Left and right, to give more room.
+
+		bottom: 1em; 
 		left: 1em;
 		right: 1em;
+*/
 		position: absolute;
 	}
 	.sidebar .sidebar-content {
-		width:75%;
+		width:95%;
 		margin:0 auto;
 	}
 }
