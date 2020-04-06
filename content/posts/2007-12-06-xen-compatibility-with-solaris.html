@@ -1,0 +1,108 @@
++++
+author = "levon"
+published = 2007-12-06T23:01:49.000Z
+slug = "2007-12-06-xen-compatibility-with-solaris"
+categories = []
+title = "Xen compatibility with Solaris"
++++
+Maintaining the compatibility of hardware virtualization solutions can be tricky. Below I'll
+talk about two bugs that needed fixes in the Xen hypervisor. Both of them have
+unfortunate implications for compatibility, but thankfully, the scope was limited.
+</p>
+<h3><a href="http://bugs.opensolaris.org/bugdatabase/view_bug.do?bug_id=6616864">6616864 amd64 syscall handler needs fixing for xen 3.1.1</a></h3>
+<p>
+Shortly after the release of 3.1.1, we discovered that all 64-bit processes in a Solaris domain
+would segfault immediately. After much debugging and head-scratching, I eventually found the problem.
+On AMD64, 64-bit processes trap into the kernel via the <tt>syscall</tt> instruction. Under Xen,
+this will obviously trap to the hypervisor. Xen then 'bounces' this back to the relevant OS kernel.
+</p>
+<p>
+On real hardware, <tt>%rcx</tt> and <tt>%r11</tt> have specific meanings. Prior to 3.1.1, Xen
+happened to maintain these values correctly, although the layout of the stack is very different
+from real hardware. This was broken in the 3.1.1 release: as a result, the <tt>%rflags</tt> of each
+process was corrupted, and segfaulted almost immediately. We <a href="http://src.opensolaris.org/source/xref/onnv/onnv-gate/usr/src/uts/i86pc/ml/syscall_asm_amd64.s#343">fixed the bug in Solaris</a>, so we would still work with 3.1.1. This was also fixed (restoring the
+original semantics) <a href="http://xenbits.xensource.com/xen-unstable.hg?rev/c918a68617c9">in Xen itself</a> in time for the 3.1.2 release. So there's a small window (early Solaris xVM releases and community versions of Xen 3.1.1)
+where we're broken, but thankfully, we caught this pretty early. The lesson to be drawn? Clear documentation of
+the hypervisor ABI would have helped, I think.
+</p>
+<h3><a href="http://bugs.opensolaris.org/bugdatabase/view_bug.do?bug_id=6618391">6618391 64-bit xVM lets processes fiddle with kernelspace, but Xen bug saves us</a></h3>
+<p>
+Around the same time, I noticed during code inspection that we were still setting <tt>PT_USER</tt> in PTE
+entries on 64-bit. This had some nasty implications, but first, some background.
+</p>
+<p>
+On 32-bit x86, Xen protects itself via segmentation: it carves out the top 64Mb, and refuses to let any
+of the domains load a segment selector that allows read or write access to that part of the address space.
+Each domain kernel runs in ring 1 so can't get around this.
+On 64-bit, this hack doesn't work, as AMD64 does not provide full support for segmentation (given what
+a legacy technique it is). Instead, and somewhat unfortunately, we have to use page-based permissions
+via the VM system. Since page table entries only have a single bit
+("user/supervisor") instead of being able to say "ring 1 can read, but ring 3 cannot", 
+ the OS kernel is forced into ring 3. Normally, ring 3 is used for userspace code. So every time we switch
+between the OS kernel and userspace, we have to switch page tables entirely - otherwise, the process could
+use the kernel page tables to write to kernel address-space.
+</p>
+<p>
+Unfortunately, this means that we have to flush the TLB every time, which has a nasty performance cost.
+To help mitigate this problem, in Xen 3.0.3, an incompatible change was made. Previously, so that the kernel
+(running in ring 3, remember) could access its address space, it had to set <tt>PT_USER</tt> int its kernel
+page table entries (PTEs). With 3.0.3, this was changed: now, the hypervisor would automatically do that.
+Furthermore, if Xen <em>did</em> see a PTE with <tt>PT_USER</tt> set, then it assumed this was a userspace
+mapping. Thus, it also set <tt>PT_GLOBAL</tt>, a hardware feature - if such a bit is set, then a corresponding
+TLB entry is not flushed.
+This meant that switching between userspace and the OS kernel was much faster, as the TLB entries for userspace
+were no longer flushed.
+</p>
+<p>
+Unfortunately, in our kernel, we missed this change in some crucial places, and until we fixed the bug above,
+we were setting <tt>PT_USER</tt> even on kernel mappings. This was fairly obviously A Bad Thing: if you caught
+things just right, a kernel mapping would still be present in the TLB when a user-space program was running,
+allowing userspace to read from the kernel! And indeed, some simple testing showed this:
+</p>
+<pre>
+dtrace -qn 'fbt:genunix::entry /arg0 > `kernelbase/ { printf("%p ", arg0); }' | \
+    xargs -n 1 ~johnlev/bin/i386/readkern | while read ln; do echo $ln::whatis | mdb -k ; done
+</pre>
+<p>
+With the above use of DTrace, MDB, and a little program that attempts to read addresses,
+we can see output such as:
+</p>
+<pre>
+ffffff01d6f09c00 is ffffff01d6f09c00+0, allocated as a thread structure
+ffffff01c8c98438 is ffffff01c8c983e8+50, bufctl ffffff01c8ebf8d0 allocated from as_cache
+ffffff01d6f09c00 is ffffff01d6f09c00+0, allocated as a thread structure
+ffffff01d44d7e80 is ffffff01d44d7e80+0, bufctl ffffff01d3a2b388 allocated from kmem_alloc_40
+ffffff01d44d7e80 is ffffff01d44d7e80+0, bufctl ffffff01d3a2b388 allocated from kmem_alloc_40
+</pre>
+
+<p>
+Thankfully, the fix was simple: just <a href="http://src.opensolaris.org/source/diff/onnv/onnv-gate/usr/src/uts/i86pc/vm/hat_i86.c?r2=5316&amp;r1=5262">stop adding <tt>PT_USER</tt> to our kernel PTE entries</a>. Or so I thought.
+When I did that, I noticed during testing that the userspace mappings weren't getting <tt>PT_GLOBAL</tt>
+set after all (big thanks to MDB's <tt>::vatopfn</tt>, which made this easy to see).
+</p>
+<p>
+Yet more investigation revealed the problem to be in the hypervisor. Unlike certain other popular
+OSes used with Xen, we set PTE entries in page tables using atomic compare and swap operations.
+Remember that under Xen, page tables are read-only to ensure safety. When an OS kernel tries
+to write a PTE, a page fault happens in Xen. Xen recognises the write as an attempt to update
+a PTE and emulates it. However, since it hadn't been tested, this emulation path was broken:
+it wasn't doing the correct mangling of the PTE entry to set <tt>PT_GLOBAL</tt>. Once again,
+the <a href="http://xenbits.xensource.com/xen-unstable.hg?rev=2173fe77dcd2">actual fix</a> was
+simple.
+</p>
+
+<p>
+By the way, that same putback also had the implementation of:
+</p>
+<h3><a href="">6612324 ::threadlist could identify taskq threads</a></h3>
+<p>
+I'd been doing an awful lot of paging through <tt>::threadlist</tt>
+output recently, and always having to jump through all the (usually
+irrelevant) taskq threads was driving me insane. So now you can
+just specify <tt>::threadlist -t</tt> and get a much, much, shorter list.
+</p>
+
+
+<p class="tags">Tags: <a href="http://www.technorati.com/tag/Xen" rel="tag">Xen</a>
+<a href="http://www.technorati.com/tag/OpenSolaris" rel="tag">OpenSolaris</a>
+<a href="http://www.technorati.com/tag/xVM" rel="tag">xVM</a>

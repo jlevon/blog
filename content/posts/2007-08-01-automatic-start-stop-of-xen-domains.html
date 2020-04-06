@@ -1,0 +1,61 @@
++++
+author = "levon"
+published = 2007-08-01T00:41:24.000Z
+slug = "2007-08-01-automatic-start-stop-of-xen-domains"
+categories = []
+title = "Automatic start/stop of Xen domains"
++++
+After <a href="http://mail.opensolaris.org/pipermail/xen-discuss/2007-July/001011.html">answering a query</a>, I
+said I'd write a blog entry describing what changes we've made to support clean shutdown and start of Xen domains.
+</p>
+<p>
+Bernd refers to an older method of auto-starting Xen domains used on Linux. In fact, this method has been replaced
+with the configuration parameters <tt>on_xend_start</tt> and <tt>on_xend_stop</tt>. Setting these can ensure
+that a Xen domain is cleanly shut down when the host (dom0) is shut down, and started automatically as needed. For
+somewhat obvious reasons, we'd like to have the same semantics as used with zones, if not quite the same implementation
+(yet, at least).
+</p>
+<p>
+When I started looking at this, I realised that the community solution had some problems:
+</p>
+<h3>Clean shutdown wasn't the default</h3>
+<p>
+It seems obvious that by default I'd like my operating systems to shut down cleanly. Only in unusual circumstances would
+I be happy with an OS being unceremoniously destroyed. We modified our Xen gate to default to <tt>on_xend_stop=shutdown</tt>.
+</p>
+
+<h3>Suspend on shutdown was dangerous</h3>
+<p>
+It is possible to specify <tt>on_xend_stop=suspend</tt>; this will save the running state to an image file and then destroy the domain (like <tt>xm save</tt>). However, there is not corresponding <tt>on_xend_start</tt> setting, nor
+any logic to ensure that the values match. This is both apparently useless and even dangerous, since starting a new
+domain but with old file-system state from a suspended domain could be problematic. We've disabled this functionality.
+</p>
+
+<h3>Actions are tied into xend</h3>
+<p>
+This was the biggest problem for us: as modelled, if somebody stops <tt>xend</tt>, then all the domains would be shut down. Similarly, if <tt>xend</tt> restarts for whatever reason (say, a hardware error), it would start domains again.
+We've modified this on Solaris. Instead of <tt>xend</tt> operating on these values, we introduce a new SMF service,
+<a href="http://movementarian.org/solaris-xen/xen-gate/sunos.hg/src/svc/xctl-domains"><tt>system/xctl/domains</tt></a>,
+that auto-starts/stops domains as necessary. 
+This service is pretty similar to <tt>system/zones</tt>. We've set up the <a href="http://movementarian.org/solaris-xen/xen-gate/sunos.hg/src/svc/domains.xml">dependencies</a> such that a restart
+of the Xen daemons won't cause any running domains to be restarted. For this to work properly within the SMF
+framework, we also had to modify <tt>xend</tt> to wait for all domains to finish their state transitions.
+</p>
+
+<p>
+You can find our changes <a href="http://movementarian.org/solaris-xen/xen-gate/xen.hg/.hg/patches/hack-domain-autostart">here</a>. And yes,
+we still need to take <tt>system/xctl/domains</tt> to PSARC.
+</p>
+
+<h2>Clean shutdown implementation</h2>
+<p>
+You might be wondering how the dom0 even asks the guest domains to shut down cleanly. This is done via a xenstore
+entry, <tt>control/shutdown</tt>. The control tools write a string into this entry, which is being "watched" by
+the domain. The kernel then reads the value and responds appropriately 
+(<a href="http://movementarian.org/solaris-xen/usr/src/uts/i86xpv/os/xen_machdep.c">xen_shutdown()</a>),
+
+triggering a <a href="http://movementarian.org/solaris-xen/xen-gate/sunos.hg/src/scripts/xpvsys-event">user-space script</a> via the sysevent framework. If nothing happens for a while, it's possible that the script couldn't run
+for whatever reason. In that case, we time-out and force a "dirty" shutdown from within the kernel.
+</p>
+
+<p class="tags">Tags: <a href="http://www.technorati.com/tag/Xen" rel="tag">Xen</a> <a href="http://www.technorati.com/tag/OpenSolaris" rel="tag">OpenSolaris</a>

@@ -1,0 +1,77 @@
++++
+author = "levon"
+published = 2008-02-01T17:09:21.000Z
+slug = "2008-02-01-dtrace-on-xenstored"
+categories = []
+title = "DTrace on xenstored"
++++
+<a href="http://xenbits.xensource.com/staging/xen-unstable.hg?rev/a6c037d8cba3">DTrace support for xenstored</a>
+has just been merged in the upstream community version of Xen. Why is it useful?
+</p>
+<p>
+The daemon <tt>xenstored</tt> runs in dom0 userspace, and implements a simple 'store' of configuration information.
+This store is used for storing parameters used by running guest domains, and interacts with dom0,
+guest domains, qemu, xend, and others. These interactions can easily get pretty complicated as a result,
+and visualizing how requests and responses are connected can be non-obvious.
+</p>
+<p>
+The existing community solution was a 'trace' option to <tt>xenstored</tt>: you could restart the daemon and it would
+record every operation performed. This worked reasonably well, but was very awkward: restarting <tt>xenstored</tt>
+means a reboot of dom0 at this point in time. By the time you've set up tracing, you might not be able to reproduce
+whatever you're looking at any more. Besides, it's extremely inconvenient.
+</p>
+<p>
+It was obvious that we needed to make this dynamic, and DTrace USDT (Userspace Statically Defined Tracing) was the
+obvious choice. The patch adds a couple of simple probes for tracking requests and responses; as usual, they're activated
+dynamically, so have (next to) zero impact when they're not used. On top of these probes I wrote a simple
+script called <tt>xenstore-snoop</tt>. Here's a couple of extracts of the output I get when I start a guest domain:
+</p>
+<pre>
+# /usr/lib/xen/bin/xenstore-snoop 
+DOM  PID      TX     OP
+0    100313   0      XS_GET_DOMAIN_PATH: 6 -> /local/domain/6
+0    100313   0      XS_TRANSACTION_START:  -> 930
+0    100313   930    XS_RM: /local/domain/6 -> OK
+0    100313   930    XS_MKDIR: /local/domain/6 -> OK
+...
+6    0        0      XS_READ: /local/domain/0/backend/vbd/6/0/state -> 4
+6    0        0      XS_READ: device/vbd/0/state -> 3
+0    0        -      XS_WATCH_EVENT: /local/domain/6/device/vbd/0/state FFFFFF0177B8F048
+6    0        -      XS_WATCH_EVENT: device/vbd/0/state FFFFFF00C8A3A550
+6    0        0      XS_WRITE: device/vbd/0/state 4 -> OK
+0    0        0      XS_READ: /local/domain/6/device/vbd/0/state -> 4
+6    0        0      XS_READ: /local/domain/0/backend/vbd/6/0/feature-barrier -> 1
+6    0        0      XS_READ: /local/domain/0/backend/vbd/6/0/sectors -> 16777216
+6    0        0      XS_READ: /local/domain/0/backend/vbd/6/0/info -> 0
+6    0        0      XS_READ: device/vbd/0/device-type -> disk
+6    0        0      XS_WATCH: cpu FFFFFFFFFBC2BE80 -> OK
+6    0        -      XS_WATCH_EVENT: cpu FFFFFFFFFBC2BE80
+6    0        0      XS_READ: device/vif/0/state -> 1
+6    0        0      [ERROR] XS_READ: device/vif/0/type -> ENOENT
+...
+</pre>
+<p>
+This makes the interactions immediately obvious. We can observe the Xen domain that's doing the request, the PID
+of the process (this only applies to dom0 control tools), the transaction ID, and the actual operations performed.
+This has already proven of use in several investigations.
+</p>
+<p>
+Of course this being DTrace, this is only part of the story. We can use these probes to correlate system behaviour:
+for example, <tt>xenstored</tt> transactions are currently rather heavyweight, as they involve copying a large file;
+these probes can help demonstrate this. Using <a href="http://blogs.sun.com/levon/entry/python_and_dtrace_in_build">Python's DTrace support</a>, we can look at which stack traces in <tt>xend</tt> correspond to which requests to the store; and so on.
+</p>
+<p>
+This feature, whilst relatively minor, is part of an ongoing plan to improve the observability and RAS of Xen and the solutions Sun are building on top of it. It's very important to us to bring Solaris's excellent observability features to the virtualization space: you've seen the work with zones in this area, and you can expect a lot more improvements
+for the Xen case too.
+</p>
+
+<h3>IRC</h3>
+<p>
+I meant to say: after my previous post, I resurrected <a href="irc://irc.freenode.org/#opensolaris-dev"><tt>#opensolaris-dev</tt></a>: if you'd like to talk about OpenSolaris development in a non-hostile environment,
+please join!
+</p>
+
+<p class="tags">Tags: <a href="http://www.technorati.com/tag/Xen" rel="tag">Xen</a>
+<a href="http://www.technorati.com/tag/OpenSolaris" rel="tag">OpenSolaris</a>
+<a href="http://www.technorati.com/tag/xVM" rel="tag">xVM</a>
+<a href="http://www.technorati.com/tag/DTrace" rel="tag">DTrace</a>

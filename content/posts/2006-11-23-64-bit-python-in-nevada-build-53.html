@@ -1,0 +1,35 @@
++++
+author = "levon"
+published = 2006-11-23T22:19:11.000Z
+slug = "2006-11-23-64-bit-python-in-nevada-build-53"
+categories = []
+title = "64-bit Python in Nevada build 53"
++++
+Coming to you in build 53 of OpenSolaris is 64-bit Python, which I worked on with Laszlo Peter of
+JDS fame. This means Python modules can make use of 64-bit versions of libraries, as well as 64-bit
+plugins. You can run the 64-bit version of Python via the path <tt>/usr/bin/amd64/python</tt> (on x86).
+This path isn't quite set in stone yet, so don't rely on it.
+</p>
+<p>
+This facility didn't previously exist on any OS, so we had to make some innovations in terms of how Python
+lets modules build and load. In particular the Makefile used by Python previously hard-coded certain
+compiler flags etc. We had to make this dynamic. Also, we had to make some modifications to where Python
+looks for <tt>.so</tt> files when loading modules. Previously it would just assume that, say,
+<tt>/usr/lib/python2.4/foo.so</tt> was of the correct word size. Now, if it's running 64-bit, it will look
+for <tt>/usr/lib/python2.4/64/foo.so</tt>.
+</p>
+<p>
+Similarly, building a Python module using the 64-bit Python will automagically install the <tt>.so</tt> file
+in the right place. Thanks to their architecture-independence, we don't need the same tricks for the <tt>.pyc</tt>
+files.
+</p>
+<p>
+The need for this arose from the continuing work on Solaris dom0's running under Xen. The kernel/hypervisor interfaces
+provided are not 64-bit clean in the sense that 32-bit tools cannot deal with 64-bit domains; as a result, we need
+to run (the Python-based) <tt>xend</tt> as a native binary.
+</p>
+<p>
+As an added bonus, Laca has also upgraded to Python 2.4.4, which finally enables the <tt>curses</tt> module on Solaris;
+also fixed are some niggling problems with accidental regeneration of <tt>.pyc</tt> files.
+</p>
+<p class="tags">Tags: <a href="http://www.technorati.com/tag/Xen" rel="tag">Xen</a> <a href="http://www.technorati.com/tag/OpenSolaris" rel="tag">OpenSolaris</a> <a href="http://www.technorati.com/tag/Python" rel="tag">Python</a>

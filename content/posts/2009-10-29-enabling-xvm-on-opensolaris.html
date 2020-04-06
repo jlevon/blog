@@ -1,0 +1,23 @@
++++
+author = "levon"
+published = 2009-10-29T18:31:58.000Z
+slug = "2009-10-29-enabling-xvm-on-opensolaris"
+categories = []
+title = "Enabling xVM on OpenSolaris"
++++
+Another significant usability improvement that landed in build 126 is Gary and Bill's work
+on enabling Xen. Now, running xVM should be as simple as:
+</p>
+<pre>
+# pkg install xvm-gui
+# echo 'set zfs:zfs_arc_max = 0x10000000' >>/etc/system # yes, you still need this, sadly
+# svcadm enable -r milestone/xvm
+# reboot
+</pre>
+<p>
+There's also a new Visual Panel for doing this if you prefer a graphical method. More in
+the <a href="http://hub.opensolaris.org/bin/view/Community+Group+on/2009101201">flag day message</a>.
+
+<p class="tags">Tags: <a href="http://www.technorati.com/tag/Xen" rel="tag">Xen</a>
+<a href="http://www.technorati.com/tag/OpenSolaris" rel="tag">OpenSolaris</a>
+<a href="http://www.technorati.com/tag/xVM" rel="tag">xVM</a>

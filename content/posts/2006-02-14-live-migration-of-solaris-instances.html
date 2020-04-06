@@ -1,0 +1,190 @@
++++
+author = "levon"
+published = 2006-02-14T00:46:55.000Z
+slug = "2006-02-14-live-migration-of-solaris-instances"
+categories = []
+title = "Live migration of Solaris instances"
++++
+Today we released our current source tree for our Solaris Xen port; for more details
+and the downloads see the <a href="http://opensolaris.org/os/community/xen/">Xen community on OpenSolaris</a>.
+</p>
+<p>
+One of the most useful features of Xen is its ability to package up a running
+OS instance (in Xen terminology, a "domainU", where "U" stands for
+"unprivileged"), plus all of its state, and take it offline, to be resumed at a
+later time. Recently we performed the first successful live migration of a
+running Solaris instance between two machines. In this blog I'll cover the
+various ways you can do this.
+</p>
+<h2>
+Para-virtualisation of the MMU
+</h2>
+<p>
+Typical "full virtualisation" uses a method known as "shadow page tables",
+whereby two sets of pagetables are maintained: the guest domain's set,
+which aren't visible to the hardware via <tt>cr3</tt>, and page tables visible to the
+hardware which are maintained by the hypervisor. As only the hypervisor can
+control the page tables the hardware uses to resolve TLB misses, it can
+maintain the virtualisation of the address space by copying and validating any
+changes the guest domain makes to its copies into the "real" page tables.
+</p><p>
+All these duplicates pages come at a cost of course. A para-virtualisation
+approach (that is, one where the guest domain is aware of the virtualisation
+and complicit in operating within the hypervisor) can take a different tack. In
+Xen, the guest domain is made aware of a two-level address system. The domain
+is presented with a linear set of "pseudo-physical" addresses comprising the
+physical memory allocated to the domain, as well as the "machine" addresses for
+each corresponding page. The machine address for a page is what's used in the
+page tables (that is, it's the real hardware address). Two tables are used to
+map between pseudo-physical and machine addresses.  Allowing the guest domain
+to see the real machine address for a page provides a number of benefits, but
+slightly complicates things, as we'll see.
+</p>
+<h2>
+Save/Restore
+</h2>
+<p>
+The simplest form of "packaging" a domain is suspending it to a file in the
+controlling domain (a privileged OS instance known as "domain 0"). A running
+domain can be taken offline via an <tt>xm save</tt> command, then restored at a later
+time with <tt>xm restore</tt>, without having to go through a reboot cycle - the domain
+state is fully restored.
+</p>
+<pre>
+xm save xen-7 /tmp/domain.img
+</pre>
+<p>
+An <tt>xm save</tt> notifies the domain to suspend itself. This arrives via the
+<tt>xenbus</tt> watch system on the node <tt>control/shutdown</tt>, and is handled via
+<tt>xen_suspend_domain()</tt>. This is actually remarkably simple. First we leverage
+Solaris's existing suspend/resume subsystem, CPR, to iterate through the
+devices attached to the domain's device nexus. This calls each of the virtual
+drivers we use (the network, console, and block device frontends) with a
+<tt>DDI_SUSPEND</tt> argument. The virtual console, for example, simply removes its
+interrupt handler in <tt>xenconsdetach()</tt>. As a guest domain, this tears down the
+Xen event channel used to communicate with the console backend. The rest of the
+suspend code deals with tearing down some of the things we use to communicate
+with the hypervisor and domain 0, such as the grant table mappings.
+Additionally we convert a couple of stored MFN (the frame numbers of machine
+addresses) values into pseudo-physical PFNs. This is because the MFNs are free to
+change when we restore the guest domain; as the PFNs aren't "real", they will
+stay the same. Finally we call <tt>HYPERVISOR_suspend()</tt> to call into the hypervisor
+and tell it we're ready to be suspended.
+</p><p>
+Now the domain 0 management tools are ready to checkpoint the domain to the
+file we specified in the <tt>xm save</tt> command. Despite the name, this is done via
+<tt>xc_linux_save()</tt>. Its main task is to convert any MFN values that the domain
+still has into PFN values, then write all its pages to the disk. These MFN
+values are stored in two main places; the PFN->MFN mapping table managed by the
+domain, and the actual pages of the page tables.
+</p><p>
+During boot, we identified which pages store the PFN->MFN table (see
+<tt>xen_relocate_start_info()</tt>), and pointed to that structure in the "shared info"
+structure, which is shared between the domain and the hypervisor. This is
+used to map the table in <tt>xc_linux_save()</tt>.
+</p><p>
+The hypervisor keeps track of which pages are being used as page tables. Thus,
+after domain 0 has mapped the guest domain's pages, we write out the page
+contents, but modify any pages that are identified as page tables. This is
+handled by <tt>canonicalize_pagetable()</tt>; this routine replaces all PTE entries that
+contain MFNs with the corresponding PFN value.
+</p><p>
+There are a couple of other things that need to be fixed too, such as the GDT.
+</p>
+<pre>
+xm restore /tmp/domain.img
+</pre>
+<p>
+Restoring a domain is essentially the reverse operation: the data for each page
+is written into one of the machine addresses reserved for the "new" domain; if
+we're writing a saved page table, we replace each PTE's PFN value with the new
+MFN value used by the new instance of the domain.
+</p><p>
+Eventually the restored domain is given back control, coming out from the
+<tt>HYPERVISOR_suspend()</tt> call. Here we need to rebuild the event channel setup, and
+anything else we tore down before suspending. Finally, we return back from the
+suspend handler and continue on our merry way.
+</p>
+<h2>
+Migration
+</h2>
+<pre>
+xm migrate xen-7 remotehost
+</pre>
+<p>
+A normal save/restore cycle happens on the same machine, but migrating a domain
+to a separate machine is a simple extension of the process. Since our save
+operation has replaced any machine-specific frame number value with the
+pseudo-physical frames, we can easily do the restore on a remote machine,
+even though the actual hardware pages given to the domainU will be different. The
+remote machine must have the Xen daemon listening on the HTTP port, which is a
+simple change in its config file.  Instead of writing each page's contents to a
+file, we can transmit it across HTTP to the Xen daemon running on a remote
+machine. The restore is done on that machine in the same manner as described
+above.
+</p>
+<h2>
+Live Migration
+</h2>
+<pre>
+xm migrate --live xen-7 remotehost
+</pre>
+<p>
+The real magic happens with live migration, which keeps the time the domain
+isn't kept running to a bare minimum (on the order of milliseconds). Live
+migration relies on the empirically observed data that an OS instance is
+unlikely to modify a large percentage of its pages within a certain time frame;
+thus, by iteratively copying over modified domain pages, we'll eventually reach
+a point where the remaining data to be copied is small enough that the actual
+downtime for a domainU is minimal.
+</p><p>
+In operation, the domain is switched to use a modified form of the shadow page
+tables described above, known as "log dirty" mode. In essence, a shadow page
+table is used to notify the hypervisor if a page has been written to, by
+keeping the PTE entry for the page read-only: an attempt to write to the page
+causes a page fault. This page fault is used to mark the domain page as "dirty"
+in a bitmap maintained by the hypervisor, which then fixes up the domain's page
+fault and allows it to continue.
+</p><p>
+Meanwhile, the domain management tools iteratively transfers unmodified pages
+to the remote machine. It reads the dirty page bitmap and re-transmits any page
+that has been modified since it was last sent, until it reaches a point where
+it can finally tell the domain to suspend, and switch over to running it on the
+remote machine. This process is described in more detail in <a href="http://www.cl.cam.ac.uk/Research/SRG/netos/papers/2005-migration-nsdi-pre.pdf">Live
+Migration of Virtual Machines</a>.
+</p><p>
+Whilst transmitting all the pages takes a while, the actual time between
+suspension and resume is typically very small.  Live migration is pretty fun to
+watch happen; you can be logged into the domain over ssh and not even notice
+that the domain has migrated to a different machine.
+ </p>
+<h2>
+Further Work
+</h2>
+<p>
+Whilst live migration is currently working for our Solaris changes, there's
+still a number of improvements and fixes that need to be made.
+</p><p>
+On x86, we usually use the TSC register as the basis for a high-resolution
+timer (heavily used by the microstate accounting subsystem). We don't directly
+use any virtualisation of the TSC value, so when we restore a domain, we can
+see a large jump in the value, or even see it go backwards. We handle this OK
+(once we fixed <a href="bugs.opensolaris.org/bugdatabase/view_bug.do?bug_id=6228819">bug 6228819</a>
+in our gate!), but don't yet properly handle the
+fact that the relationship between TSC ticks and clock frequency can change
+between a suspend and resume. This screws up our notion of timing.
+</p><p>
+We don't make any effort to release physical pages that we're not currently
+using. This makes suspend/resume take longer than it should, and it's probably
+worth investigating what can be done here.
+</p><p>
+Currently many hardware-specific instructions and features are enabled at boot
+by patching in instructions if we discover the CPU supports it. For example we
+discovered a domain that died badly when it was migrated to a host that didn't
+support the sfence instruction. If such a kernel is migrated to a machine with
+different CPUs, the domain will naturally fail badly. We need to investigate
+preventing incompatible migrations (the standard Xen tools currently do no
+verification), and also look at whether we can adapt to some of these changes
+when we resume a domain.
+</p>
+<p class="tags">Tags: <a href="http://www.technorati.com/tag/OpenSolaris" rel="tag">OpenSolaris</a> <a href="http://www.technorati.com/tag/Xen" rel="tag">Xen</a>

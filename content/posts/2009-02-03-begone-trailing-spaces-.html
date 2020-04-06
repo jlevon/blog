@@ -1,0 +1,14 @@
++++
+author = "levon"
+published = 2009-02-03T17:05:30.000Z
+slug = "2009-02-03-begone-trailing-spaces-"
+categories = []
+title = "Begone, trailing spaces!"
++++
+I read my work email with <tt>mutt</tt> on a Solaris 9 box. For a while it's been irritating me that when you attempt to cut
+and paste, it will include trailing spaces on each line instead of stopping at the last "real" character. Some Googling suggested this was because of the lack of the BCE attribute in my <tt>xterm-color</tt> terminfo definition. Rather than
+learn how to compile terminfo entries (I've done it before, but I don't want to learn again!), I took the lazier approach:
+copy <tt>/usr/share/terminfo/s/screen-256color-bce</tt> from a Fedora 8 box into <tt>/home/johnlev/.terminfo/s/</tt>, and start <tt>mutt</tt> with <tt>TERM</tt> and <tt>TERMINFO</tt> set appropriately. Now I can cut and paste sanely again.
+</p>
+<p class="tags">Tags: <a href="http://www.technorati.com/tag/Solaris" rel="tag">Solaris</a>
+<a href="http://www.technorati.com/tag/mutt" rel="tag">mutt</a>

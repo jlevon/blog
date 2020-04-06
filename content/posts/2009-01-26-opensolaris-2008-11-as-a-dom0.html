@@ -1,0 +1,97 @@
++++
+author = "levon"
+published = 2009-01-26T21:28:17.000Z
+slug = "2009-01-26-opensolaris-2008-11-as-a-dom0"
+categories = []
+title = "OpenSolaris 2008.11 as a dom0"
++++
+<b>UPDATE</b>: the canonical location for this information is now <a href="http://opensolaris.org/os/community/xen/docs/2008_11_dom0/">here</a> - please check there, as it will be updated as necessary, unlike this blog entry.
+</p>
+<p>
+As a final part to my entries on OpenSolaris and Xen, let's go through the steps needed to turn
+OpenSolaris into a dom0. Thanks to Trevor O for <a href="http://trevoro.ca/blog/2008/05/07/getting-xvm-to-work-in-opensolaris-200805/">documenting this for 2008.05</a>. And as before, expect this process to get much, much, easier soon!
+</p>
+
+<p>
+I'm going to do the work in a separate BE, so if we mess up, we shouldn't have broken anything. So, first we create
+our BE:
+</p>
+<pre>
+$ pfexec beadm create -a -d xvm xvm
+</pre>
+
+First, let's install the packages. If you've <a href="http://mail.opensolaris.org/pipermail/pkg-discuss/2008-December/009096.html">updated to the development version</a>, a simple <tt>pkg install xvm-gui</tt> <a href="http://mail.opensolaris.org/pipermail/pkg-discuss/2008-November/008984.html">will work</a>, but let's assume
+you haven't:
+</p>
+<pre>
+$ pfexec beadm mount xvm /tmp/xvm-be
+$ pfexec pkg -R /tmp/xvm-be install SUNWvirt-manager SUNWxvm SUNWvdisk SUNWvncviewer
+$ pfexec beadm umount xvm
+</pre>
+<p>
+Now we need to actually reboot into Xen. Unfortunately <tt>beadm</tt> is not yet aware of how to do this, so we'll have
+to hack it up. We're going to run some awk over the <tt>menu.lst</tt> file which controls grub:
+</p>
+<pre>
+$ awk '
+/^title/ { xvm=0; }
+/^title.xvm$/ { xvm=1; }
+/^(splashimage|foreground|background)/ {
+    if (xvm == 1) next
+}
+/^kernel\$/ {
+    if (xvm == 1) {
+       print("kernel\$ /boot/\$ISADIR/xen.gz")
+       sub("^kernel\\$", "module$")
+       gsub("console=graphics", "console=text")
+       gsub("i86pc", "i86xpv")
+       $2=$2 " " $2
+    }
+}
+{ print }' /rpool/boot/grub/menu.lst &gt;/var/tmp/menu.lst.xvm
+</pre>
+<p>
+Let's check that the awk script (my apologies) worked properly:
+</p>
+<pre>
+$ tail /var/tmp/menu.lst.xvm 
+...
+#============ End of LIBBE entry =============
+title xvm
+findroot (pool_rpool,0,a)
+bootfs rpool/ROOT/xvm
+kernel$ /boot/$ISADIR/xen.gz
+module$ /platform/i86xpv/kernel/$ISADIR/unix /platform/i86xpv/kernel/$ISADIR/unix -B $ZFS-BOOTFS,console=text
+module$ /platform/i86pc/$ISADIR/boot_archive
+#============ End of LIBBE entry =============
+</pre>
+<p>
+Looks good. We'll move it into place, and reboot:
+</p>
+<pre>
+$ pfexec cp /rpool/boot/grub/menu.lst /rpool/boot/grub/menu.lst.saved
+$ pfexec mv /var/tmp/menu.lst.xvm /rpool/boot/grub/menu.lst
+$ pfexec reboot
+</pre>
+<p>
+This should boot you into xVM. If everything worked OK, let's enable the services:
+</p>
+<pre>
+$ svcadm enable -r xvm/virtd ; svcadm enable -r xvm/domains
+</pre>
+<p>
+At this point, you should be able to merrily go ahead and install domains!
+</p>
+
+<p>
+<em>Update</em>: Todd Clayton pointed out the issue I've filed here: <a href="http://defect.opensolaris.org/bz/show_bug.cgi?id=6247">SUNWxvm needs to depend on SUNWvdisk</a>. I've updated the instructions above with
+the workaround.
+</p>
+
+<p>
+<em>Update update</em>: <a href="http://blogs.sun.com/">Rich Burridge</a> has fixed it. Nice!
+</p>
+
+<p class="tags">Tags: <a href="http://www.technorati.com/tag/OpenSolaris" rel="tag">OpenSolaris</a>
+<a href="http://www.technorati.com/tag/Xen" rel="tag">Xen</a>
+<a href="http://www.technorati.com/tag/xVM" rel="tag">xVM</a>

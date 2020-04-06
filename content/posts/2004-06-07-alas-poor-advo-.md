@@ -1,9 +1,0 @@
-+++
-author = "levon"
-published = 2004-06-07T18:36:42.000Z
-slug = "2004-06-07-alas-poor-advo-"
-categories = ["old-sun-blog"]
-title = "Alas, poor Advo..."
-+++
-Since it seems that <a href="http://www.advogato.org/person/movement/">Advogato</a> is down, with no signs of it returning,
-and my <a href="http://movementarian.org">current hosting</a> isn't suitable, I'll probably end up blogging here (translation: unimportant rant every three months).

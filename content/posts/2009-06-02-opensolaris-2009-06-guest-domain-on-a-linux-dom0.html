@@ -1,0 +1,16 @@
++++
+author = "levon"
+published = 2009-06-02T19:35:10.000Z
+slug = "2009-06-02-opensolaris-2009-06-guest-domain-on-a-linux-dom0"
+categories = []
+title = "OpenSolaris 2009.06 guest domain on a Linux dom0"
++++
+Just a quick note: you can follow the instructions I provided for the <a href="http://blogs.sun.com/levon/entry/opensolaris_2008_11_guest_domain">2008.11</a> release, with one change. On a 64-bit machine, replace any instances of <tt>/boot/x86.microroot</tt> with <tt>/boot/amd64/x86.microroot</tt>. As of 2009.06, the boot archive is split into 32-bit and 64-bit variants. If you get a message like this:
+</p>
+<pre>
+krtld: failed to open '/platform/i86xpv/kernel/amd64/unix'
+</pre>
+<p>
+Then you've probably given the wrong combination of <tt>unix</tt> and <tt>microroot</tt>.
+</p>
+By the way, in my previous entry, I mentioned we were working on upstreaming our <tt>virt-install</tt> changes. During the Xen 3.3 work (more on which soon), I updated to the latest versions and got the needed parts into the upstream version. We've still some ZFS changes to push, but if you're running a recent enough version of Xen on Linux, you may well be able to use <tt>virt-install</tt> and skip all this horrible hacking!

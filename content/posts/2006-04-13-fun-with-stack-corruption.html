@@ -1,0 +1,73 @@
++++
+author = "levon"
+published = 2006-04-13T17:27:53.000Z
+slug = "2006-04-13-fun-with-stack-corruption"
+categories = []
+title = "Fun with stack corruption"
++++
+Today, we were seeing a very odd crash in some xen code. The core dump wasn't of great use,
+since both %eip and %ebp were zeroed, which means no backtrace. Instead I attached mdb to the
+process and started stepping through to see what was happening. It soon transpired that we
+were crashing after successfully executing a C function called <a href="http://lxr.staging.xensource.com/lxr/source/tools/python/xen/lowlevel/xs/xs.c#L590"><tt>xspy_introduce_domain()</tt></a>, but
+before we got back to the Python code that calls into it. After a little bit of head-scratching,
+I looked closer at the assembly for this function:
+</p>
+<pre>
+xs.so`xspy_introduce_domain:            pushl  %ebp
+xs.so`xspy_introduce_domain+1:          movl   %esp,%ebp
+...
+xs.so`xspy_introduce_domain+0x57:       subl   $0xc,%esp
+xs.so`xspy_introduce_domain+0x5a:       leal   -0xc(%ebp),%eax
+xs.so`xspy_introduce_domain+0x5d:       pushl  %eax
+xs.so`xspy_introduce_domain+0x5e:       leal   -0x8(%ebp),%eax
+xs.so`xspy_introduce_domain+0x61:       pushl  %eax
+xs.so`xspy_introduce_domain+0x62:       leal   -0x2(%ebp),%eax
+xs.so`xspy_introduce_domain+0x65:       pushl  %eax
+xs.so`xspy_introduce_domain+0x66:       pushl  $0xc4b13114
+xs.so`xspy_introduce_domain+0x6b:       pushl  0xc(%ebp)
+xs.so`xspy_introduce_domain+0x6e:       call   +0x43595220      
+...
+xs.so`xspy_introduce_domain+0x11f:      leave
+xs.so`xspy_introduce_domain+0x120:      ret
+</pre>
+<p>
+Seems OK - we're pushing three pointers onto the stack (+0x5a-0x65) and two other arguments. Let's look
+at the sources:
+</p>
+<pre>
+static PyObject *xspy_introduce_domain(XsHandle *self, PyObject *args)
+{
+    domid_t dom;
+    unsigned long page;
+    unsigned int port;
+
+    struct xs_handle *xh = xshandle(self);
+    bool result = 0;
+
+    if (!xh)
+        return NULL;
+    if (!PyArg_ParseTuple(args, "ili", &amp;dom, &amp;page, &amp;port))
+        return NULL;
+</pre>
+<p>
+Looking up the <a href="http://www.python.org/doc/1.5.2p2/ext/parseTuple.html">definition of <tt>PyArg_ParseTuple()</tt></a>
+gave me the clue as to the problem. The format string specifies that we're giving the addresses of an int, long,
+and int. Yet in the assembly, the offsets of the <tt>leal</tt> instructions indicate we're pushing addresses to
+two 32-bit storage slots, and one 16-bit slot. So when <tt>PyArg_ParseTuple()</tt> writes its 32-bit quantity,
+it's going to overwrite two more bytes than it should.
+</p>
+<p>
+As it happens, we're at the very top of the local stack storage space (<tt>-0x2(%ebp)</tt>). So those two bytes
+actually end up over-writing the bottom two bytes of the old <tt>%ebp</tt> we pushed at the start of the function.
+Then we pop that corrupted value back into the <tt>%ebp</tt> register via the <tt>leave</tt>. This has no effect
+until our caller calls <tt>leave</tt> itself. We move <tt>%ebp</tt> into <tt>%esp</tt>, then attempt to pop from
+the top of this stack into <tt>%ebp</tt> again. As it happens, the memory pointed to by the corrupt <tt>%ebp</tt>
+is zeroed; thus, we end up setting <tt>%ebp</tt> to zero. Finally, our caller does a <tt>ret</tt>, which pops
+another zero, but this time into <tt>%eip</tt>. Naturally this isn't a happy state of affairs, and we find ourselves
+with a core dump as described earlier.
+</p>
+<p>
+Presumably this bug happened in the first place because someone didn't notice that <tt>domid_t</tt> was a 16-bit quantity. What's amazing is that nobody else has been hitting this problem!
+</p>
+
+<p class="tags">Tags: <a href="http://www.technorati.com/tag/Xen" rel="tag">Xen</a>
