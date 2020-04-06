@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2009-02-25T17:21:00.002000Z
 slug = "2009-02-25-holocaust-deniers"
 tags = []

@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-03-25T00:27:00.003000Z
 slug = "2008-03-25-self-knitting-lamp"
 tags = []

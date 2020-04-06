@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2009-10-20T16:42:00.003000+01:00
 slug = "2009-10-20-a-horrible-little-elementtree-gotcha"
 tags = []

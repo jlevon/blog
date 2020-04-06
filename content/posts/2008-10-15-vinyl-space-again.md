@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-10-15T16:02:00.005000+01:00
 slug = "2008-10-15-vinyl-space-again"
 tags = []

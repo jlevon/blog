@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-03-23T19:18:00.002000Z
 slug = "2008-03-23-armageddon-technik"
 tags = []

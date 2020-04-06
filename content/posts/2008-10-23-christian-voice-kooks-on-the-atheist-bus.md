@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-10-23T13:38:00.002000+01:00
 slug = "2008-10-23-christian-voice-kooks-on-the-atheist-bus"
 tags = []

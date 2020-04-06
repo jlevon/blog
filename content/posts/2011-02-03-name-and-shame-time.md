@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2011-02-03T13:02:00.002000Z
 slug = "2011-02-03-name-and-shame-time"
 tags = []

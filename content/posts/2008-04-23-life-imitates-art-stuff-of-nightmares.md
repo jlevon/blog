@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-04-23T01:47:00.003000+01:00
 slug = "2008-04-23-life-imitates-art-stuff-of-nightmares"
 tags = []

@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2020-03-09T00:40:00Z
 slug = "2020-03-09-github-commits-via-email"
 tags = []

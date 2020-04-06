@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-08-17T17:03:00.002000+01:00
 slug = "2008-08-17-pulseaudio-and-volume-controls"
 tags = []

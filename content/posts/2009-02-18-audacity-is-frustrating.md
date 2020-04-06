@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2009-02-18T02:01:00.002000Z
 slug = "2009-02-18-audacity-is-frustrating"
 tags = []

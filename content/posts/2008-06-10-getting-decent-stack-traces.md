@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-06-10T23:41:00.002000+01:00
 slug = "2008-06-10-getting-decent-stack-traces"
 tags = []

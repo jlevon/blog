@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2016-11-03T20:27:00Z
 slug = "2016-11-03-converting-html-mail-via-procmail"
 tags = []

@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-05-01T01:26:00+01:00
 slug = "2008-05-01-what-do-java-and-neil-young-have-in-common"
 tags = []

@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-10-22T03:05:00.002000+01:00
 slug = "2008-10-22-mccain-understands-small-business-growth-he-was-one"
 tags = []

@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2010-01-26T17:28:00.003000Z
 slug = "2010-01-26-setting-up-jack-on-fedora-12"
 tags = []

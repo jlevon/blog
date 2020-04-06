@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-05-08T04:13:00.004000+01:00
 slug = "2008-05-08-dear-software-authors"
 tags = []

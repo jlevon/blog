@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-04-25T01:41:00.003000+01:00
 slug = "2008-04-25-our-ecosystem-rocks"
 tags = []

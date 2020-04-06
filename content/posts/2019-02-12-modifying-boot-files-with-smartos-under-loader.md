@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2019-02-12T15:15:00.001000Z
 slug = "2019-02-12-modifying-boot-files-with-smartos-under-loader"
 tags = []

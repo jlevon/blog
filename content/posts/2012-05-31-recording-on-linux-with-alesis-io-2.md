@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2012-05-31T16:39:00+01:00
 slug = "2012-05-31-recording-on-linux-with-alesis-io-2"
 tags = []

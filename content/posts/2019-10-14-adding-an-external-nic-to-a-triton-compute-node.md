@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2019-10-14T15:21:00+01:00
 slug = "2019-10-14-adding-an-external-nic-to-a-triton-compute-node"
 tags = []

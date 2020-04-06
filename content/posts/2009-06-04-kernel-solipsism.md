@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2009-06-04T13:11:00.003000+01:00
 slug = "2009-06-04-kernel-solipsism"
 tags = []

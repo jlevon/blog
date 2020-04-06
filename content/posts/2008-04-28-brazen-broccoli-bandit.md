@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-04-28T15:22:00.001000+01:00
 slug = "2008-04-28-brazen-broccoli-bandit"
 tags = []

@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-10-15T00:24:00.002000+01:00
 slug = "2008-10-15-following-the-us-elections-from-the-uk"
 tags = []

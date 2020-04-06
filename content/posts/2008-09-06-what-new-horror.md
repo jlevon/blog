@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-09-06T19:23:00.001000+01:00
 slug = "2008-09-06-what-new-horror"
 tags = []

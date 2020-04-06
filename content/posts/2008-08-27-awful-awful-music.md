@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-08-27T20:17:00.003000+01:00
 slug = "2008-08-27-awful-awful-music"
 tags = []

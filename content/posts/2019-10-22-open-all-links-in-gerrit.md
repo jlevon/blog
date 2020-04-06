@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2019-10-22T22:32:00.001000+01:00
 slug = "2019-10-22-open-all-links-in-gerrit"
 tags = []

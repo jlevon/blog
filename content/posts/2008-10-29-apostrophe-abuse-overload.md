@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-10-29T17:49:00.002000Z
 slug = "2008-10-29-apostrophe-abuse-overload"
 tags = []

@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-03-20T17:25:00.003000Z
 slug = "2008-03-20-fujiya-miyagi"
 tags = []

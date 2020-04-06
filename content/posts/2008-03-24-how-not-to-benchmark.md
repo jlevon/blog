@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-03-24T19:01:00.003000Z
 slug = "2008-03-24-how-not-to-benchmark"
 tags = []

@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-04-09T02:18:00.001000+01:00
 slug = "2008-04-09-dear-threadless"
 tags = []

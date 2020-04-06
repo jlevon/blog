@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-07-12T14:33:00.002000+01:00
 slug = "2008-07-12-writing-python-properly"
 tags = []

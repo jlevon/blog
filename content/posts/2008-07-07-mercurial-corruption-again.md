@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-07-07T04:41:00.002000+01:00
 slug = "2008-07-07-mercurial-corruption-again"
 tags = []

@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2009-03-07T19:10:00.004000Z
 slug = "2009-03-07-tomcat-on-centos-5-2-just-dont"
 tags = []

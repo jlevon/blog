@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2018-02-26T11:32:00Z
 slug = "2018-02-26-pcid-support-on-illumos"
 tags = []

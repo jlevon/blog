@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-03-17T16:57:00Z
 slug = "2008-03-17-and-im-lost-in-confusion"
 tags = []

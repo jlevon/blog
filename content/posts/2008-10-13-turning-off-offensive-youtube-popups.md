@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-10-13T20:16:00.003000+01:00
 slug = "2008-10-13-turning-off-offensive-youtube-popups"
 tags = []

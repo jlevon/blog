@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2011-02-22T11:17:00.003000Z
 slug = "2011-02-22-paypal-idiocy"
 tags = []

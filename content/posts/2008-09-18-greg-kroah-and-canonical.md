@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-09-18T13:59:00.002000+01:00
 slug = "2008-09-18-greg-kroah-and-canonical"
 tags = []

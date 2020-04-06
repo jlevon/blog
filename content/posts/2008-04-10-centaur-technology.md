@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-04-10T19:20:00.002000+01:00
 slug = "2008-04-10-centaur-technology"
 tags = []

@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2009-03-14T12:03:00.004000Z
 slug = "2009-03-14-its-not-just-atol-nicholas"
 tags = []

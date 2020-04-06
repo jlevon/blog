@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-05-10T17:56:00.001000+01:00
 slug = "2008-05-10-smirking-cat-murdered"
 tags = []

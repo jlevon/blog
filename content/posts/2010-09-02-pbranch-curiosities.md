@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2010-09-02T01:13:00.003000+01:00
 slug = "2010-09-02-pbranch-curiosities"
 tags = []

@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-05-09T01:58:00.002000+01:00
 slug = "2008-05-09-gnome-terminal-titles"
 tags = []

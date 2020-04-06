@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-04-16T15:36:00.002000+01:00
 slug = "2008-04-16-play-distance-diagram"
 tags = []

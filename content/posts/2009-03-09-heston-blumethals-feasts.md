@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2009-03-09T22:47:00.003000Z
 slug = "2009-03-09-heston-blumethals-feasts"
 tags = []

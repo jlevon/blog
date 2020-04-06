@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-06-19T18:41:00.001000+01:00
 slug = "2008-06-19-cake-of-awesomeness"
 tags = []

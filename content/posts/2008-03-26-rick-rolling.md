@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-03-26T19:44:00Z
 slug = "2008-03-26-rick-rolling"
 tags = []

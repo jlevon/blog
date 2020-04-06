@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2010-01-31T17:26:00.003000Z
 slug = "2010-01-31-changing-liferea-keyboard-shortcuts"
 tags = []

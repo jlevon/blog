@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2019-11-07T16:56:00Z
 slug = "2019-11-07-new-version-of-zoom-recording-downloader"
 tags = []

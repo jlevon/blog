@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-07-02T03:17:00.002000+01:00
 slug = "2008-07-02-pure-python-plugins"
 tags = []

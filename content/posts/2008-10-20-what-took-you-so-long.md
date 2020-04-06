@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-10-20T23:25:00+01:00
 slug = "2008-10-20-what-took-you-so-long"
 tags = []

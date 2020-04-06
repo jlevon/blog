@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2018-10-26T13:11:00+01:00
 slug = "2018-10-26-pci-pass-through-support-with-bhyve-and-smartos"
 tags = []

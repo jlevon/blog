@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2009-02-21T18:20:00.001000Z
 slug = "2009-02-21-javascript-off"
 tags = []

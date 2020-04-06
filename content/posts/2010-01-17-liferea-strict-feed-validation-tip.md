@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2010-01-17T16:33:00.007000Z
 slug = "2010-01-17-liferea-strict-feed-validation-tip"
 tags = []

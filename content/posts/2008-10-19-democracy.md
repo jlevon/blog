@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-10-19T17:05:00+01:00
 slug = "2008-10-19-democracy"
 tags = []

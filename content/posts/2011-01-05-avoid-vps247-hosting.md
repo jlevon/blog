@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2011-01-05T23:39:00.005000Z
 slug = "2011-01-05-avoid-vps247-hosting"
 tags = []

@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2019-01-24T11:06:00Z
 slug = "2019-01-24-wodim-under-ubuntu"
 tags = []

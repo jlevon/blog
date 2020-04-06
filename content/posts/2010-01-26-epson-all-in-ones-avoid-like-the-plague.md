@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2010-01-26T23:36:00.002000Z
 slug = "2010-01-26-epson-all-in-ones-avoid-like-the-plague"
 tags = []

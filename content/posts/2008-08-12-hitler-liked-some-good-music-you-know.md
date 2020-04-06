@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-08-12T20:46:00.002000+01:00
 slug = "2008-08-12-hitler-liked-some-good-music-you-know"
 tags = []

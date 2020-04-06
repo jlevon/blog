@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-03-18T04:24:00.001000Z
 slug = "2008-03-18-when-things-explode"
 tags = []

@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-04-24T15:58:00+01:00
 slug = "2008-04-24-rumour-has-it"
 tags = []

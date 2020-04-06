@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-12-21T19:53:00.002000Z
 slug = "2008-12-21-my-stuff-of-the-year"
 tags = []

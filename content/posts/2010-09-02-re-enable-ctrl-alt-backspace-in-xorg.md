@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2010-09-02T01:05:00.001000+01:00
 slug = "2010-09-02-re-enable-ctrl-alt-backspace-in-xorg"
 tags = []

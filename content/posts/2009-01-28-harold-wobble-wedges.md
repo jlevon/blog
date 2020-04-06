@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2009-01-28T19:16:00Z
 slug = "2009-01-28-harold-wobble-wedges"
 tags = []

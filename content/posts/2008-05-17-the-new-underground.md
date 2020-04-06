@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-05-17T21:11:00.001000+01:00
 slug = "2008-05-17-the-new-underground"
 tags = []

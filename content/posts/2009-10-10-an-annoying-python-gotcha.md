@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2009-10-10T17:05:00.003000+01:00
 slug = "2009-10-10-an-annoying-python-gotcha"
 tags = []

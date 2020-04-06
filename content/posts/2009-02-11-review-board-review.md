@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2009-02-11T05:09:00.004000Z
 slug = "2009-02-11-review-board-review"
 tags = []

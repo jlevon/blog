@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2011-02-18T02:36:00.002000Z
 slug = "2011-02-18-natwest-phishing-service"
 tags = []

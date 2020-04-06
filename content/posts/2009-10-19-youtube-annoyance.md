@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2009-10-19T17:29:00.001000+01:00
 slug = "2009-10-19-youtube-annoyance"
 tags = []

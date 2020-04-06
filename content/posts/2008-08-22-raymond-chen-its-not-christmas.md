@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-08-22T02:26:00.001000+01:00
 slug = "2008-08-22-raymond-chen-its-not-christmas"
 tags = []

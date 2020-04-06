@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-04-23T21:09:00.005000+01:00
 slug = "2008-04-23-zaitcev-you-can"
 tags = []

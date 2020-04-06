@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-06-16T22:58:00+01:00
 slug = "2008-06-16-amusing-prank"
 tags = []

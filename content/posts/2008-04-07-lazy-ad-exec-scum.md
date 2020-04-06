@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-04-07T14:32:00.003000+01:00
 slug = "2008-04-07-lazy-ad-exec-scum"
 tags = []

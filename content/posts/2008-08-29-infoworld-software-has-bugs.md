@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-08-29T00:09:00+01:00
 slug = "2008-08-29-infoworld-software-has-bugs"
 tags = []

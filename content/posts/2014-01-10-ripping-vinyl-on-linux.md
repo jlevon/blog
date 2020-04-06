@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2014-01-10T11:53:00.001000Z
 slug = "2014-01-10-ripping-vinyl-on-linux"
 tags = []

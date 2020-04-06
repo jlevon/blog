@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-03-28T00:40:00.001000Z
 slug = "2008-03-28-stupid-dogs"
 tags = []

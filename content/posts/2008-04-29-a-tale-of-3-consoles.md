@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-04-29T14:21:00.003000+01:00
 slug = "2008-04-29-a-tale-of-3-consoles"
 tags = []

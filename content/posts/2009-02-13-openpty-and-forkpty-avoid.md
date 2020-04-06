@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2009-02-13T01:56:00.007000Z
 slug = "2009-02-13-openpty-and-forkpty-avoid"
 tags = []

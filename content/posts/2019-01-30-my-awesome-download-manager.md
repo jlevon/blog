@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2019-01-30T09:33:00Z
 slug = "2019-01-30-my-awesome-download-manager"
 tags = []

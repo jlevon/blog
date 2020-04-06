@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-07-29T16:24:00.002000+01:00
 slug = "2008-07-29-another-victory-for-superstition"
 tags = []

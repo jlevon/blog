@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-05-04T01:48:00+01:00
 slug = "2008-05-04-tyler-rejecting-jesus-means-youll-go-to-hell"
 tags = []

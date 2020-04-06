@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2009-03-22T22:55:00.001000Z
 slug = "2009-03-22-scoble-sets-a-new-record"
 tags = []

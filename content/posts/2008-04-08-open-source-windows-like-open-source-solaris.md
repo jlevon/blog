@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-04-08T01:32:00.002000+01:00
 slug = "2008-04-08-open-source-windows-like-open-source-solaris"
 tags = []

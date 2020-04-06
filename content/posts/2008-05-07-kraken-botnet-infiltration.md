@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2008-05-07T02:22:00.001000+01:00
 slug = "2008-05-07-kraken-botnet-infiltration"
 tags = []

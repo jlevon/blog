@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2009-02-27T00:49:00.003000Z
 slug = "2009-02-27-gas-no-gas-abadie-pizza-please"
 tags = []

@@ -1,5 +1,4 @@
 +++
-author = "John Levon"
 published = 2009-03-26T02:43:00.004000Z
 slug = "2009-03-26-outputting-xml-in-standard-python"
 tags = []
