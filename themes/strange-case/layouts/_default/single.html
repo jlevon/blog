@@ -18,6 +18,7 @@
 					<div class="post-heading">
 						<h1>{{ .Title }}</h1>
 						<span class="post-date"><a href="{{ .Permalink }}"># {{ .Date.Format "Jan 2, 2006" }}{{ if .Params.author }} by {{ .Params.author }}{{ end }}</a></span>
+						<br /><span class="post-category">{{if .Params.categories }} {{ .Params.categories }} {{ end }}</span>
 					</div>
 
 					{{ .Content }}
