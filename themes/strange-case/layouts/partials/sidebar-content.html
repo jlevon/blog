@@ -1,7 +1,7 @@
 
 	<div class="sidebar-content">
 
-		<a href="{{ .Site.BaseURL }}"><h1>{{ .Site.Title }}</h1></a>
+		<a href="{{ .Site.BaseURL }}"><h2>{{ .Site.Title }}</h2></a>
 		<p>{{ .Site.Params.description }}</p>
 		<img class="sideimg" src="/blog/john.jpg" />
 
@@ -22,7 +22,7 @@
 		<div class="sidebar-recent hidden-xs">
 			<p>Recent Posts:</p>
 			<ul>
-				{{ range first 10 (where .Site.RegularPages "Section" "posts") }}
+				{{ range first 5 (where .Site.RegularPages "Section" "posts") }}
 				<li><a href="{{.Permalink}}">{{ .Title }}</a></li>
 				{{ end }}
 			</ul>
