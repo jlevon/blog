@@ -34,7 +34,13 @@
 .postindex {
 	text-decoration: underline;
 }
-	
+
+/*
+ * Underline is too damn useful.
+ */
+a {
+	text-decoration: underline;
+}
 
 /* DEFAULTS */
 
