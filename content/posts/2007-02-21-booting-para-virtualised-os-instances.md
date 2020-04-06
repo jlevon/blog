@@ -1,0 +1,80 @@
++++
+author = "levon"
+published = 2007-02-21T15:41:37.000Z
+slug = "2007-02-21-booting-para-virtualised-os-instances"
+categories = ["old-sun-blog"]
+title = "Booting para-virtualised OS instances"
++++
+Whilst I'm waiting for my home directory to reappear, I thought I'd mention some of the work
+I've done to support easy booting of domains in Xen.
+</p>
+<p>
+For dom0 to be able to boot a para-virtualised domU, it needs to be able to bootstrap it. In
+particular, it needs to be able to read the kernel file and its associated ramdisk so it can
+hand off control to the kernel's entry point when the domain is created. And we must somehow
+make these files accessible in the dom0. Previously, you had to somehow copy out the files
+from the domU filesystem into dom0. This was often difficult (consider getting files off an
+ext2 filesystem in a Solaris dom0), and was obviously prone to errors such as forgetting to
+update the copies when upgrading the kernel.
+</p>
+<p>
+For a while now Xen has had 
+<a href="http://xenbits.xensource.com/xen-unstable.hg/file/bca284f67702/tools/python/xen/xend/XendBootloader.py">support for a bootloader</a>. This runs in userspace and is responsible
+for copying out the files (that specified by <tt>kernel</tt> and <tt>ramdisk</tt> in the domain's
+config file) to a temporary directory in dom0; the files are then passed on to the 
+<a href="http://xenbits.xensource.com/xen-unstable.hg/file/bca284f67702/tools/libxc/xc_dom_boot.c">domain
+builder</a>. Xen has shipped with a bootloader called 
+<a href="http://xenbits.xensource.com/xen-unstable.hg/file/bca284f67702/tools/pygrub/">pygrub</a>. Whilst somewhat confusingly
+named, it essentially emulated the grub menu. It had backends for a couple of Linux filesystems
+written in Python and worked by searching for a <tt>grub.conf</tt> file, then presenting a
+lookalike grub menu for the user to interact with. When an entry was selected, the specified
+files would be read off the filesystem and passed back to the builder.
+</p>
+<p>
+This worked reasonably well for Linux, but we felt there was a number of problems. First, the
+interactive menu only worked for first boot; subsequent reboots would automatically choose
+an entry without allowing user interaction (though this is now fixed in xen-unstable). Its
+interactive nature seemed quite a stumbling block for things like remote domain management;
+you really don't want to babysit domain creation. Also, the implementation of the filesystem
+backends wasn't ideal; there was only limited Linux filesystem support, and it didn't work
+very well.
+</p>
+<p>
+We've adapted pygrub to help with some of these issues. First, we replaced the filesystem
+code with a C library called <a href="http://xenbits.xensource.com/xen-unstable.hg/file/bca284f67702/tools/libfsimage/">libfsimage</a>. The
+intention here is to provide a 
+<a href="http://xenbits.xensource.com/xen-unstable.hg/file/bca284f67702/tools/libfsimage/common/fsimage.h">stable API</a> for accessing filesystem images from userspace. Thus
+it provides a simple interface for reading files from a filesystem image and a plugin architecture
+to provide the filesystem support. This
+<a href="http://xenbits.xensource.com/xen-unstable.hg/file/bca284f67702/tools/libfsimage/common/fsimage_plugin.h">plugin API</a> is also stable, allowing filesystems past, present and 
+future to be transparently supported. Currently there are plugins for ext2, reiserfs, ufs and iso9660,
+and we expect to have a zfs plugin soon. We borrowed the grub code for all of these plugins
+to simplify the implementation, but the API allows for any implementation.
+</p>
+<p>
+Some people were suggesting solutions involving loopback mounts. This was problematic for us
+for two main reasons. First, filesystem support in the different dom0 OS's is far from complete;
+for example, Solaris has no ext2 support, and Linux has no (real) ZFS support. Second, and more
+seriously, it exposes a significant gap in terms of isolation: the dom0 kernel FS code
+must be entirely resilient against a corrupt domU filesystem image. If we are to consider domU's
+as untrusted, it doesn't make sense to leave this open as an attack vector.
+</p>
+
+<p>
+Another simple change we made was to allow operation without a <tt>grub.conf</tt> at all. You can
+specify a kernel and ramdisk and make pygrub automatically load them from the domU filesystem. Even
+easier, you can leave out all configuration altogether, and a Solaris domU will automatically boot
+the correct kernel and ramdisk. This makes setting up your config for a domU much easier.
+</p>
+
+<p>
+<tt>pygrub</tt> understands both fdisk partitions and Solaris slices, so simply specifying the disk
+will cause the bootloader to look for the root slice and grab the right files to boot.
+</p>
+
+<p>
+There's <a href="http://bugs.opensolaris.org/bugdatabase/view_bug.do?bug_id=6526776">more work</a>
+we can do yet, of course.
+</p>
+
+<p class="tags">Tags: <a href="http://www.technorati.com/tag/Xen" rel="tag">Xen</a> <a href="http://www.technorati.com/tag/OpenSolaris" rel="tag">OpenSolaris</a>

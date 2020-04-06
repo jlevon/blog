@@ -1,0 +1,87 @@
++++
+author = "levon"
+published = 2006-02-14T18:20:51.000Z
+slug = "2006-02-14-a-brief-tour-of-i86xen"
+categories = ["old-sun-blog"]
+title = "A brief tour of i86xen"
++++
+In this post, I'm going to give a quick walk through the major changes we've made so far in doing
+our port of Solaris to the Xen "platform". As we've only supplied a tarball of the source tree
+so far, I can't hyperlink to the relevant bits - sorry about that.
+As our code is still under heavy development, you can expect some of this code organisation to change significantly; nonetheless I thought this might be useful for those interested in peeking into the internals of what we've done so far.
+</p>
+
+<p>
+As you might expect, the vast majority of the changes we've made reside in the kernel. To support
+booting Solaris under Xen (both domU and dom0, though as we've said the latter is still in the very
+early stages of development), we've introduced a new platform based on <tt>i86pc</tt> called <tt>i86xen</tt>. Wherever
+possible, we've tried to share common code by using <tt>i86pc</tt>'s sources. There's still some cleanup
+we can do in this area.
+</p>
+
+<p>
+Within <tt>usr/src/uts/i86xen</tt>, there are a number of Xen-specific source files:
+</p>
+
+<dl>
+<dt><tt>io/psm/</tt></dt>
+<dd>
+Contains the PSM ("Platform-Specific Module") module for Xen. This mirrors the PSM provided by <tt>i86pc</tt>,
+but deals with the hypervisor-provided features such as the clock timer and the events system.
+</dd>
+
+<dt><tt>io/xendev/</tt></dt>
+<dd>
+This contains the virtual root nexus driver "xendev". All of the virtual frontend drivers are connected to this.
+</dd>
+
+<dt><tt>io/xvbd/</tt></dt>
+<dd>
+The virtual block driver. It's currently non-functional with the version of Xen we're working with; we're working
+hard on getting it functional.
+</dd>
+
+<dt><tt>os/</tt></dt>
+<dd>
+The guts of the kernel/hypervisor code. Amongst other things, it provides interfaces for dealing with events in
+<tt>evtchn.c</tt> and <tt>hypervisor_machdep.c</tt> (the hypervisor version of virtual interrupts, which hook into Solaris's standard interrupt system), the grant table in <tt>gnttab.c</tt> (used for providing access/transfer of pages between frontend and backend, suspend/resume in <tt>xen_machdep.c</tt>, and support routines for the debugger and the MMU code (<tt>mach_kdi.c</tt> and <tt>xen_mmu.c</tt> respectively).
+</dd>
+
+</dl>
+
+<p>
+As mentioned we use the <tt>i86pc</tt> code where possible, occasionally using <tt>#ifdef</tt>s where minor differences
+are found. In particular we re-use the <tt>i86pc</tt> HAT (MMU management) code found in <tt>i86pc/vm</tt>. You can
+also find code for the new boot method <a href="http://blogs.sun.com/roller/page/JoeBonasera/20060213">described by Joe Bonasera</a> in <tt>i86pc/dboot</tt> and <tt>i86pc/boot</tt>.
+</p>
+
+<p>
+A number of drivers that are needed by Xen but aren't <tt>i86xen</tt> specific live under <tt>usr/src/uts/common</tt>:
+</p>
+
+<dl>
+<dt><tt>common/io/xenbus_*.c common/io/xenbus/</tt></dt>
+<dd>
+"xenbus" is a simple transport for configuration data provided by domain0; for example, it provides a node <tt>control/shutdown</tt> which will notify the domainU that the user has requested the domain to be shutdown
+(or suspended) from domain0's management tools. This code provides this support.
+</dd>
+
+<dt><tt>common/io/xencons/</tt></dt>
+<dd>
+The virtual console frontend driver.
+</dd>
+
+<dt><tt>common/io/xennetf/</tt></dt>
+<dd>
+The virtual net device frontend driver.
+</dd>
+
+</dl>
+
+<p>
+As you might expect, the userspace changes we've needed to make so far have been reasonably minimal. Despite supporting
+the new <tt>i86xen</tt> platform definition, the only significant changes have been to <tt>usr/src/cmd/mdb/</tt>,
+where we've added some changes to better support debugging of the Xen-style x86 MMU.
+</p>
+
+<p class="tags">Tags: <a href="http://technorati.com/tag/OpenSolaris" rel="tag">OpenSolaris</a> <a href="http://technorati.com/tag/Xen" rel="tag">Xen</a>

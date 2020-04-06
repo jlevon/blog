@@ -1,0 +1,75 @@
++++
+author = "levon"
+published = 2009-10-15T15:27:02.000Z
+slug = "2009-10-15-xvm-and-comstar-iscsi"
+categories = ["old-sun-blog"]
+title = "xVM and COMSTAR iSCSI"
++++
+I recently had cause to try out COMSTAR for the first time, and I thought I'd write up the steps needed. Unfortunately,
+it's considerably more complex than the fall-over-easy <tt>shareiscsi=on</tt> ZFS feature.
+</p>
+<h2>Configuring the COMSTAR server</h2>
+<p>
+First install the <tt>storage-server</tt> packages and enable the services:
+<pre>
+# svcadm enable -r stmf
+# svcadm enable -r iscsi/target
+</pre>
+
+<p>
+We want to create a target group for each of our xVM guests, each of which will have one LUN in it. After creating
+the LUN, we define a "view" that allows that LUN to be visible for that target group:
+</p>
+<pre>
+# stmfadm create-tg domu-226
+# zfs create -V 15G export/domu-226
+# stmfadm create-lu /dev/zvol/rdsk/export/domu-226
+Logical unit created: 600144F0C73ABF0F00004AD75DF2001A
+# stmfadm add-view -t domu-226 600144F0C73ABF0F00004AD75DF2001A
+</pre>
+<p>
+Now we need to create the iSCSI target for this target group, that has our single LUN in it.
+</p>
+<pre>
+# itadm create-target -l domu-226
+Target iqn.1986-03.com.sun:02:b8596bb9-9bb9-40e9-8cda-add6073ece46 successfully created
+</pre>
+<p>
+Here (finally) is our iSCSI Alias we can use in the clients. But we're not done yet. By default, this target
+will be able to see all LUNs not in a target group. So we need to make it a member of our domu-226 target group:
+</p>
+<pre>
+# stmfadm add-tg-member -g domu-226 iqn.1986-03.com.sun:02:b8596bb9-9bb9-40e9-8cda-add6073ece46
+# stmfadm list-tg -v
+Target Group: domu-226
+        Member: iqn.1986-03.com.sun:02:b8596bb9-9bb9-40e9-8cda-add6073ece46
+</pre>
+
+<h2>Configuring the iSCSI initiator (client)</h2>
+
+<p>
+We do this in the usual manner:
+</p>
+
+<pre>
+# svcadm enable -r svc:/network/iscsi/initiator:default
+# iscsiadm add discovery-address 10.6.70.43:3260
+# iscsiadm modify discovery --sendtargets enable
+</pre>
+
+<h2>Installing a guest onto the LUN</h2>
+
+<p>
+We went through the above gymnastics so we can have a human-readable Alias for each of the domu's root LUNs. So now we can do:
+</p>
+
+<pre>
+# virt-install --paravirt --name domu-226 --ram 1024 --os-type solaris --os-variant opensolaris \
+  --location nfs:10.5.235.28:/export/nv/x/latest --network bridge,mac=00:14:4f:0f:b5:3e \
+  --disk path=/alias/domu-226,driver=phy,subdriver=iscsi \
+  --nographics
+</pre>
+<p class="tags">Tags: <a href="http://www.technorati.com/tag/OpenSolaris" rel="tag">OpenSolaris</a>
+<a href="http://www.technorati.com/tag/Xen" rel="tag">Xen</a>
+<a href="http://www.technorati.com/tag/xVM" rel="tag">xVM</a>
+<a href="http://www.technorati.com/tag/COMSTAR" rel="tag">COMSTAR</a>

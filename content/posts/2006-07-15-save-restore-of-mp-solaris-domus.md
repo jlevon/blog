@@ -1,0 +1,42 @@
++++
+author = "levon"
+published = 2006-07-15T01:52:22.000Z
+slug = "2006-07-15-save-restore-of-mp-solaris-domus"
+categories = ["old-sun-blog"]
+title = "Save/restore of MP Solaris domUs"
++++
+In honour of our <a href="http://www.opensolaris.org/os/community/xen/How-To-07-2006/">new release</a> of OpenSolaris
+on Xen, here's some details on the changes I've made to support save/resume (and hence migration and <a href="http://blogs.sun.com/roller/page/levon?entry=live_migration_of_solaris_instances">live migration</a>) with MP Solaris domUs. As before, to actually see the code I'm describing, you'll need to <a href="http://dlc.sun.com/osol/xen/downloads/current/osox-src-2006-07-14.tar.bz2">download the sources</a> - sorry about that.
+</p>
+<p>
+Under Xen, the suspend process is somewhat unusual, in that only the CPU context for (virtual) CPU0 is stored in the state file. This implies that the actual suspend operation must be performed on CPU0, and we have to find some other way
+of capturing CPU context (that is, the register set) for the other CPUs.
+</p>
+<p>
+In the Linux implementation, Xen suspend/resume works by using the standard CPU hotplug support for all CPUs other than CPU0. Whilst this works well for Linux, this approach is more troublesome for Solaris. Hot-unplugging the other CPUs doesn't match well with the mapping between Xen and Solaris notions of "offline" CPUs (the interested can read the big comment on line 406 of <tt>usr/src/uts/i86xen/os/mp_xen.c</tt> for a description of how this mapping currently works). In particular, offline CPUs on Solaris still participate in IPI interrupts, whilst a "down" VCPU in Xen cannot.
+</p>
+<p>
+In addition, the standard CPU offlining code in Solaris is not built for this purpose; for example, it will refuse to offline a CPU with bound threads, or the last CPU in a partition.
+</p>
+<p>
+However, all we really need to do is get the other CPUs into a known state which we can recover during the resume process. All the dispatcher data structures etc. associated with the CPUs can remain in place. To this end, we can use <tt>pause_cpus()</tt> on the other CPUs. By replacing the pause handler with a special
+routine (<tt>cpu_pause_suspend()</tt>), we can store the CPU context via a <tt>setjmp()</tt>, waiting until all CPUs
+have reached the barrier. We need to disable interrupts (or rather, Xen's virtualized equivalent of interrupts), as we
+have to tear down all the interrupts as part of the suspend process, and we need to ensure none of the CPUS go wandering off.
+</p>
+<p>
+Once all CPUs are blocked at the known synchronisation point, we can tell Xen to "down" the other VCPUs so they can no longer run, and complete the remaining cleanup we need to do before we tell Xen we're ready to stop via <tt>HYPERVISOR_suspend()</tt>.
+</p>
+<p>
+On resume, we will come back on CPU0, as Xen stored the context for that CPU itself. After redoing some of the setup we tore down during suspend, we can move on to resuming the other CPUs. For each CPU, we call <tt>mach_cpucontext_restore()</tt>. We use the same Xen call used to create the CPUs during initial boot. In this routine, we fiddle a little bit with the context saved in the <tt>jmpbuf</tt> by <tt>setjmp()</tt>; because we're not actually
+returning via a normal <tt>longjmp()</tt> call, we need to emulate it. This means adjusting the stack pointer to simulate a <tt>ret</tt>, and pretending we've returned 1 from <tt>setjmp()</tt> by setting the <tt>%eax</tt> or <tt>%rax</tt> register in the context.
+</p>
+<p>
+When each CPU's context is created, it will look as if it's just returned from the <tt>setjmp()</tt> in <tt>cpu_pause_suspend()</tt>, and will continue upon its merry way.
+</p>
+<p>
+Inevitably, being a work-in-progress, there are still bugs and unresolved issues. Since offline CPUs won't participate in a <tt>cpu_pause()</tt>, we need to make sure that those CPUs (which will typically be sitting in the idle loop) are safe; currently this isn't being done. There are also some open issues with 64-bit live migration,
+and suspending SMP domains with virtual disks, which we're busy working on.
+</p>
+
+<p class="tags">Tags: <a href="http://www.technorati.com/tag/Xen" rel="tag">Xen</a> <a href="http://www.technorati.com/tag/OpenSolaris" rel="tag">OpenSolaris</a>

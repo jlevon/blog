@@ -1,0 +1,20 @@
++++
+author = "levon"
+published = 2004-12-15T22:31:14.000Z
+slug = "2004-12-15-committees"
+categories = ["old-sun-blog"]
+title = "Committees"
++++
+Marvellous comment from <a href="http://ian.hixie.ch/">Ian Hixie</a>, over in the
+infamous <a href="http://bugzilla.mozilla.org/show_bug.cgi?id=25537">Mozilla bug 25537</a>:
+</p>
+<pre>
+> Keep in mind the old saying that a committee is a life form with six or more
+> legs, but no brain.
+
+This is no committee, it's a meritocratic elite dictatorship. In fact, listening
+to everyone's input, such as yours, is what would make this a committee.
+
+I agree that committee-driven design creates poor products.
+</pre>
+<p>
