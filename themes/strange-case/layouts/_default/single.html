@@ -23,12 +23,14 @@
 
 					{{ .Content }}
 	
+					<div class="prevnext">
 					{{ with .PrevInSection }}
 					  <a class="prevpost" href="{{ .Permalink }}">&lt;&lt; {{ .Title }}</a>
 					{{ end }}
 					{{ with .NextInSection }}
 					  <a class="nextpost" href="{{ .Permalink }}"> {{ .Title }} &gt;&gt;</a>
 					{{ end }}
+					</div>
 
 				</div>
 
