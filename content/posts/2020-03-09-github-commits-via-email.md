@@ -10,21 +10,23 @@ itself can't email you when commits are made to a particular repo
 (unless you own it and can configure hooks). So I need to resort to the
 atom feeds, and [rss2email](https://github.com/rss2email/rss2email):
 
-    $ r2e new jlevon@movementarian.org
-    $ vi .rss2email/config.py
-       # set local (sendmail) delivery, disable HTML mail, etc.
-    $ r2e opmlimport subscriptions.xml
-    $ declare -f github-commits
-    github-commits () 
-    { 
-        r2e add $(basename $1) "https://github.com/$1/commits/master.atom"
-    }
-    $ crontab -l | grep r2e
-    */10 * * * * r2e run
-    $ tail -3 .procmailrc 
-    :0
-    * User-Agent: rss2email
-    commits/
+```shell
+$ r2e new jlevon@movementarian.org
+$ vi .rss2email/config.py
+   # set local (sendmail) delivery, disable HTML mail, etc.
+$ r2e opmlimport subscriptions.xml
+$ declare -f github-commits
+github-commits () 
+{ 
+    r2e add $(basename $1) "https://github.com/$1/commits/master.atom"
+}
+$ crontab -l | grep r2e
+*/10 * * * * r2e run
+$ tail -3 .procmailrc 
+:0
+* User-Agent: rss2email
+commits/
+```
 
 So every 10 minutes, we'll get new commits from all the watched repos,
 and procmail them into a `commits` folder.
