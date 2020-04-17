@@ -250,7 +250,9 @@ p.attr {
 
 /* Dark Brown Scheme */
 .scheme-darkbrown .sidebar {
-	background-color: #4d4d4d;
+	/*background-color: #4d4d4d;*/
+	/* nice dark blue */
+	background-color: #1e1940;
 	color: #f2f0ec;
 }
 .scheme-darkbrown .sidebar h1 {
