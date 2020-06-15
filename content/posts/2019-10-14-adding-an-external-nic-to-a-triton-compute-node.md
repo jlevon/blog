@@ -20,7 +20,7 @@ NIC:
 then tell NAPI (from the headnode) that this NIC is going to provide the
 `external` tag:
 
-    sdc-napic /nics/e4:11:5b:97:83:49 -X PUT -d '{ "nic_tags_provided" : "external" }'
+    sdc-napi /nics/e4:11:5b:97:83:49 -X PUT -d '{ "nic_tags_provided" : "external" }'
 
 We now need to actually add the `external` VNIC in NAPI:
 
