@@ -31,6 +31,15 @@ commits/
 So every 10 minutes, we'll get new commits from all the watched repos,
 and procmail them into a `commits` folder.
 
+With the number of repos I'm watching, I have to set:
+
+```
+same-server-fetch-interval = 0.5
+```
+
+in the configuration to stop github throwing back `429 Too Many
+Requests` at me.
+
 Private repositories
 --------------------
 
