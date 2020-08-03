@@ -8,9 +8,9 @@ Nicholas Nethercote [warns us against
 atol()](http://blog.mozilla.com/nnethercote/2009/03/13/atol-considered-harmful/).
 Sadly, he recommends using strtol() instead. This interface is almost as
 bad. If atol() is [impossible to get
-right](http://www.technovelty.org/code/badcode/rusty-hard-to-misuse.html),
+right](https://technovelty.org/badcode/rusty-russells-hard-to-misuse-rules.html),
 strtol() has to be classified under [the obvious use is
-wrong](http://www.technovelty.org/code/badcode/rusty-hard-to-misuse.html).  
+wrong](https://technovelty.org/badcode/rusty-russells-hard-to-misuse-rules.html).  
   
 As a perfect example of how horrible strtol() is, let's look at his
 example code:  
