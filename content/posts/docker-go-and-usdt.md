@@ -240,7 +240,7 @@ what the issue here is.
 Let's try a volume mount instead:
 
 ```
-$ tail -3 playbook.yml 
+$ tail -3 playbook.yml
         volumes:
           - /sys/kernel/debug:/sys/kernel/debug
           - /tmp/tmp.usdt_test:/tmp
