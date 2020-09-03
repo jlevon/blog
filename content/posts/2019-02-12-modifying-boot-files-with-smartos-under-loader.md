@@ -19,9 +19,17 @@ blog](http://dtrace.org/blogs/wesolows/2013/12/28/anonymous-tracing-on-smartos/)
 the way to get around this problem involves specifying specific files to
 over-ride the default.
 
-Obviously this has changed under `loader`. Let's presume we want to
-over-ride `/etc/system` to set `kmem_flags`. First, let's take a copy of
-our file and edit it:
+Obviously this has changed under `loader`.
+
+---
+**NOTE:** This is now documented at on the SmartOS wiki at
+[Modifying Boot Files](https://wiki.smartos.org/modifying-boot-files/).
+Please look there instead, as the below may not stay current.
+
+---
+
+Let's presume we want to over-ride `/etc/system` to set `kmem_flags`.
+First, let's take a copy of our file and edit it:
 
     # sdc-usbkey mount
     /mnt/usbkey
@@ -35,10 +43,11 @@ we used something like
 it's similar:
 
     # cd /mnt/usbkey/boot
-    # echo etc_system_load=YES >>loader.conf.local
-    # echo etc_system_type=file >>loader.conf.local
-    # echo etc_system_name=/bootfs/etc/system >>loader.conf.local
-    # echo etc_system_flags=\"name=/etc/system\" >>loader.conf.local
+    # grep etc_system loader.conf.local
+    etc_system_load=YES
+    etc_system_type=file
+    etc_system_name=/bootfs/etc/system
+    etc_system_flags="name=/etc/system"
 
 The prefix (`etc_system_`) is fairly arbitrary, though often named after
 the module. For each file you want, you'd want a `_load`, `_type`,
@@ -62,3 +71,7 @@ And we should find a copy of our modified file here:
     # tail /system/boot/etc/system 
     ...
     set kmem_flags=0xf
+
+The kernel has a search path such that it will load from `/system/boot`
+prior to `/`. So the above is our active file, although `/etc/system` is
+still the standard shipped file.
