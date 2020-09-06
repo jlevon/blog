@@ -25,10 +25,10 @@
 	
 					<div class="prevnext">
 					{{ with .PrevInSection }}
-					  <a class="prevpost" href="{{ .Permalink }}">&lt;&lt; {{ .Title }}</a>
+					  <a class="prevpost" aria-label="Previous" href="{{ .Permalink }}">&lt;&lt; {{ .Title }}</a>
 					{{ end }}
 					{{ with .NextInSection }}
-					  <a class="nextpost" href="{{ .Permalink }}"> {{ .Title }} &gt;&gt;</a>
+					  <a class="nextpost" aria-label="Next" href="{{ .Permalink }}"> {{ .Title }} &gt;&gt;</a>
 					{{ end }}
 					</div>
 
