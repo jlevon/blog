@@ -17,7 +17,7 @@ Next stop was [hugo](https://gohugo.io/) which was much, much
 nicer. Although it was still a little tedious to import (there's not
 really integration, so you need 3rd party tools like the one I used
 to import the Blogger content -
-[blog2md](https://github.com/palaniraja/blog2md).
+[blog2md](https://github.com/palaniraja/blog2md)).
 
 The base theme I ended up using was [Strange
 Case](https://themes.gohugo.io/strange-case/). Having battled with
