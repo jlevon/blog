@@ -26,7 +26,7 @@ javascript: (
       alert('no links');
     } else {
       if (confirm('Open ' + dll + ' links in new windows?')) {
-        for (i = 0; i < dll; ++i) {
+        for (var i = 0; i < dll; ++i) {
           window.open(dl[i].href);
         }
       }
@@ -38,3 +38,5 @@ javascript: (
 (Add the above as the "Location" of a bookmark.) If somebody knows a
 less shitty way to traverse all the new shadow roots, I'd love to hear
 it.
+
+2021-01-27: updated to fix a javascript error
