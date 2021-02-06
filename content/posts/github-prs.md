@@ -1,7 +1,6 @@
 ---
 title: "Github Pull Requests"
 date: 2021-02-06T13:46:53Z
-draft: true
 ---
 
 [Stefan Hajnoczi](http://blog.vmsplice.net/) recently [posted about clean commit
