@@ -80,8 +80,8 @@ and open a PR. You'd have another local branch with `A` and `B`, then push
 
 Now we need to make the `B` PR be based against the `A` PR. You can do this via
 the web UI by clicking `Edit`, though there is annoying bug here: it doesn't
-reset the title and description. (I haven't checked, yet, whether the CLI tools
-avoid this niggle.)
+reset the title and description. You can use `gh pr create --base ...` to avoid
+this problem.
 
 Now, in the second PR, you'll just see the commit for `B`.  Each PR can be
 reviewed separately, and each PR gets its own CI run.
