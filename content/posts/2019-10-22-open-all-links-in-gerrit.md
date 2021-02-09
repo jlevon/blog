@@ -11,22 +11,25 @@ so:
 ```js
 javascript: (
   function() {
-    var n_to_open = 0;
-    // just this for older gerrit versions
     var dl = document.querySelectorAll(".pathLink");
-    // or more current
-    var dl = document.querySelector('body > gr-app')
-      .shadowRoot.querySelector('gr-app-element')
-      .shadowRoot.querySelector('gr-change-view')
-      .shadowRoot.querySelector('gr-file-list')
-      .shadowRoot.querySelectorAll('.pathLink');
 
-    var dll = dl.length;
-    if (!dll) {
+    if (!dl.length) {
+        dl = document.querySelectorAll(".path");
+    }
+
+    if (!dl.length) {
+        dl = document.querySelector('body > gr-app')
+            .shadowRoot.querySelector('gr-app-element')
+            .shadowRoot.querySelector('gr-change-view')
+            .shadowRoot.querySelector('gr-file-list')
+            .shadowRoot.querySelectorAll('.pathLink');
+    }
+
+    if (!dl.length) {
       alert('no links');
     } else {
-      if (confirm('Open ' + dll + ' links in new windows?')) {
-        for (var i = 0; i < dll; ++i) {
+      if (confirm('Open ' + dl.length + ' links in new windows?')) {
+        for (var i = 0; i < dl.length; ++i) {
           window.open(dl[i].href);
         }
       }
@@ -40,3 +43,4 @@ less shitty way to traverse all the new shadow roots, I'd love to hear
 it.
 
 2021-01-27: updated to fix a javascript error
+2021-02-09: updated for some other gerrit versions
