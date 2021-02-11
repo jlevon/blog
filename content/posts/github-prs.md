@@ -104,11 +104,11 @@ this, the stacked PR gets automatically reset such that its merge base is now
 
 There is an annoying thing here though: because of that squash during the merge
 to `main`, `git`, and Github, needs you to merge `main` back into the commit
-history of the PR that just changed bases. Often, this can be done without
-issues, if you actually made changes to the same lines as the base PR did, when
-you merge `main` in, you'll get conflicts. But in fact, because you *always*
-want the state of the current PR, you can always trivially choose the PR's
-version in resolving the conflicts.
+history of the PR that just changed bases. If you already merged the parent PR,
+you can always do `git merge -Xours master` to fix this, since there shouldn't
+be any actual diff difference between the PR branch diffs as a whole, and what
+was merged to master. Or, if you didn't merge in the parent PR, you'll need a
+normal `git merge master`.
 
 I would love all this to have some tooling: something that lets me do
 everything on my local stacked branches, automate merges up, keep track of
