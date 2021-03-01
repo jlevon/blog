@@ -110,6 +110,11 @@ be any actual diff difference between the PR branch diffs as a whole, and what
 was merged to master. Or, if you didn't merge in the parent PR, you'll need a
 normal `git merge master`.
 
+Another bug (as far as I'm concerned) is that if you ask for review on a stacked
+PR, it doesn't get tagged with "Review required", since, technically, you could
+merge the PR into its parent without approval. And there is no "Review
+requested" tag.
+
 I would love all this to have some tooling: something that lets me do
 everything on my local stacked branches, automate merges up, keep track of
 dependencies, and updating the branches in Github. But I haven't been able to
