@@ -18,6 +18,10 @@ javascript: (
     }
 
     if (!dl.length) {
+        dl = document.querySelectorAll(".com-google-gerrit-client-change-FileTable-FileTableCss-pathColumn > a");
+    }
+
+    if (!dl.length) {
         dl = document.querySelector('body > gr-app')
             .shadowRoot.querySelector('gr-app-element')
             .shadowRoot.querySelector('gr-change-view')
@@ -42,5 +46,6 @@ javascript: (
 less shitty way to traverse all the new shadow roots, I'd love to hear
 it.
 
-2021-01-27: updated to fix a javascript error
-2021-02-09: updated for some other gerrit versions
+- 2021-01-27: updated to fix a javascript error
+- 2021-02-09: updated for some other gerrit versions
+- 2021-06-17: updated for yet another gerrit version
