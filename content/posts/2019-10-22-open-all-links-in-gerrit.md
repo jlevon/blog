@@ -14,19 +14,23 @@ javascript: (
     var dl = document.querySelectorAll(".pathLink");
 
     if (!dl.length) {
-        dl = document.querySelectorAll(".path");
+      dl = document.querySelectorAll("a.gr-file-list");
     }
 
     if (!dl.length) {
-        dl = document.querySelectorAll(".com-google-gerrit-client-change-FileTable-FileTableCss-pathColumn > a");
+      dl = document.querySelectorAll(".path");
     }
 
     if (!dl.length) {
-        dl = document.querySelector('body > gr-app')
-            .shadowRoot.querySelector('gr-app-element')
-            .shadowRoot.querySelector('gr-change-view')
-            .shadowRoot.querySelector('gr-file-list')
-            .shadowRoot.querySelectorAll('.pathLink');
+      dl = document.querySelectorAll(".com-google-gerrit-client-change-FileTable-FileTableCss-pathColumn > a");
+    }
+
+    if (!dl.length) {
+      dl = document.querySelector('body > gr-app')
+           .shadowRoot.querySelector('gr-app-element')
+           .shadowRoot.querySelector('gr-change-view')
+           .shadowRoot.querySelector('gr-file-list')
+           .shadowRoot.querySelectorAll('.pathLink');
     }
 
     if (!dl.length) {
