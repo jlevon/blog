@@ -1,7 +1,6 @@
 ---
 title: "How I Code Review"
 date: 2022-02-05
-draft: true
 ---
 
 I thought it might be interesting, at least to myself, to write up how I
