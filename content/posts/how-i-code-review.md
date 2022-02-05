@@ -145,7 +145,7 @@ Many of these things can be a matter of opinion, so I try to bear in mind other
 ways of thinking, up to a point. I'm never going to be happy seeing a ton of
 CamelCase and Hungarian notation in code that doesn't have it already.
 
-## Iterate
+# Iterate
 
 I haven't yet found a code review tool that's ideal at iteration: gerrit is
 still pretty hopeless at tracking outstanding comment state. PRs in github are
