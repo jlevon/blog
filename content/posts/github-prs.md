@@ -120,6 +120,9 @@ everything on my local stacked branches, automate merges up, keep track of
 dependencies, and updating the branches in Github. But I haven't been able to
 find anything that can do it.
 
+[2022-05-12 update]: I just came across [spr](https://github.com/ejoffe/spr)
+which is so far proving excellent in solving some of these problems. I love it!
+
 [^1]: Gerrit uses
 [Change-ID](https://gerrit-review.googlesource.com/Documentation/user-changeid.html)
 embedded in the commit message to map commits onto CRs. It's clumsy but
