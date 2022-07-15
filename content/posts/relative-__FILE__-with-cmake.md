@@ -1,7 +1,6 @@
 ---
 title: "Relative __FILE__ With CMake"
 date: 2022-06-16T10:04:56+01:00
-draft: true
 ---
 
 I have the misfortune of maintaining some things using CMake. One major
@@ -25,9 +24,9 @@ function(add_srcs NAME)
 endfunction()
 ```
 
-This will take each of arguments, convert each file into a path relative to the
-top-level directory, then re-define `__FILE__` on a per-source-file basis. We
-also `set()` a variable for our parent scope to use.
+This will take each of the arguments, convert each file into a path relative to
+the top-level directory, then re-define `__FILE__` on a per-source-file basis.
+We also `set()` a variable for our parent scope to use.
 
 We'll also need `-Wno-builtin-macro-redefined`.
 
