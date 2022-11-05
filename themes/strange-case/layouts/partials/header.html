@@ -6,7 +6,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	{{ hugo.Generator }}
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-	<title>{{ .Title }} - {{ .Site.Params.description }}</title>
+	<title>
+	{{ if and (.IsNode) (eq .Section "all") }}
+		All Posts - {{ .Site.Params.description }}
+	{{ else }}
+		{{ .Title }} - {{ .Site.Params.description }}
+	{{end}}
+	</title>
 
 	<!-- Bootstrap -->
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
