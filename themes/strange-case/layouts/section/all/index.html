@@ -1,5 +1,6 @@
 {{ partial "header.html" . }}
 
+
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-sm-4 col-md-3 col-lg-3 sidebar">
@@ -12,21 +13,16 @@
 -->
 			<div class="col-sm-8 col-sm-offset-4 col-md-8 col-md-offset-3 content">
 
-				{{ range .Paginator.Pages }}
 				<div class="post">
 
-					<div class="post-heading">
-						<h1><a href="{{ .Permalink }}">{{ .Title }}</a></h1>
-						<span>{{ .Date.Format "Jan 2, 2006" }}{{ if .Params.author }} by {{ .Params.author }}{{ end }}</span>
-					</div>
+				<h2>All posts</h2>
 
-					{{ .Content }}
+				<ul class="postindex">
+					{{ range (where .Site.RegularPages "Section" "posts") }}
+					<li><a href="{{.Permalink}}">{{ .Date.Format "2006-01-02" }}: {{ .Title }}</a></li>
+					{{ end }}
+				</ul>
 
-				</div>
-				{{ end }}
-
-				<div class="text-center">
-					{{ template "_internal/pagination.html" . }}
 				</div>
 
 			</div>
