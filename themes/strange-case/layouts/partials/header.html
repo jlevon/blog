@@ -30,7 +30,7 @@
 	{{ "<![endif]-->" | safeHTML }}
 
 	<!-- RSS -->
-	<link rel="alternate" type="application/rss+xml" href="/blog/index.xml" title="RSS feed">
+	<link rel="alternate" type="application/rss+xml" href="/blog/posts/index.xml" title="RSS feed">
 <!-- FIXME: this doesn't work
 {{ range .AlternativeOutputFormats -}}
     {{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Site.Title | safeHTML }}
