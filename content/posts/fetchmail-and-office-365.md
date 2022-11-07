@@ -1,7 +1,6 @@
 ---
 title: "Fetchmail and Office 365"
 date: 2022-11-06T22:27:14Z
-draft: true
 ---
 
 I [previously](https://movementarian.org/blog/posts/mutt-and-office365/)
