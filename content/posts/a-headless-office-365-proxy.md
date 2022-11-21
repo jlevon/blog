@@ -26,8 +26,14 @@ client_id = facd6cff-a294-4415-b59f-c5b01937d7bd
 client_secret =
 ```
 
-We're re-using `davmail`'s `client_id` again. We'll configure `fetchmail` as
-follows:
+We're re-using `davmail`'s `client_id` again.
+
+**Updated 2022-11-22**: you also want to set
+[delete_account_token_on_password_error](https://github.com/simonrob/email-oauth2-proxy/blob/main/emailproxy.config#L178)
+to `False`: I'm a bit bemused on why anyone would ever want this to be set to
+`True`, and unfortunately, that's the default.
+
+We'll configure `fetchmail` as follows:
 
 ```
 poll localhost protocol IMAP port 1993
