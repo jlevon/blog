@@ -32,9 +32,9 @@ We're re-using `davmail`'s `client_id` again.
 discussed below.
 
 **Updated 2022-11-22**: you also want to set
-[delete_account_token_on_password_error](https://github.com/simonrob/email-oauth2-proxy/blob/main/emailproxy.config#L178)
-to `False`: I'm a bit bemused on why anyone would ever want this to be set to
-`True`, and unfortunately, that's the default.
+[delete_account_token_on_password_error](https://github.com/simonrob/email-oauth2-proxy/blob/73f7d8aa44d7404d9a7a3a6f7e9b3f6388c956fc/emailproxy.config#L199)
+to `False`: otherwise, a typo will delete the tokens, and you'll need to
+re-authenticate from scratch.
 
 We'll configure `fetchmail` as follows:
 
