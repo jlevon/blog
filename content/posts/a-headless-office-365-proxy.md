@@ -28,6 +28,9 @@ client_secret =
 
 We're re-using `davmail`'s `client_id` again.
 
+**Updated 2023-10-10**: `emailproxy` now supports a proper headless mode, as
+discussed below.
+
 **Updated 2022-11-22**: you also want to set
 [delete_account_token_on_password_error](https://github.com/simonrob/email-oauth2-proxy/blob/main/emailproxy.config#L178)
 to `False`: I'm a bit bemused on why anyone would ever want this to be set to
@@ -68,7 +71,7 @@ $ cat /etc/systemd/system/emailproxy.service
 Description=Email OAuth 2.0 Proxy
 
 [Service]
-ExecStart=/home/localuser/src/email-oauth2-proxy/emailproxy.py --external-auth --no-gui --config-file /home/localuser/src/email-oauth2-proxy/my.config
+ExecStart=/usr/bin/python3 /home/localuser/src/email-oauth2-proxy/emailproxy.py --external-auth --no-gui --config-file /home/localuser/src/email-oauth2-proxy/my.config
 Restart=always
 
 [Install]
@@ -77,34 +80,40 @@ WantedBy=multi-user.target
 
 # Headless operation
 
-In the upstream project, only initial authorizations require the GUI.
-Unfortunately, for truly headless operation, things are a bit more complicated.
-In theory, you can use the `--local-server-auth` with a localhost
-`redirect-uri`, but this is awkward enough to use that it seems useless: the
-`README` talks vaguely about log monitoring, and this hack isn't permitted by
-the `davmail` `client_id` anyway.
+Typically, only initial authorizations require the GUI, so you could easily do
+the initial dance then use the above systemd service.
 
-The maintainer isn't interested in supporting headless in any other way, so I
-have a fork with this in [my no-gui-external
-branch](https://github.com/jlevon/email-oauth2-proxy/tree/no-gui-external).
+Even better, with current versions of `email-oauth2-proxy`, you can operate in
+an entirely headless manner! With the above `--external-auth` and `--no-gui`
+options, the proxy will prompt on `stdin` with a URL you can copy into your
+browser; pasting the response URL back in will authorize the proxy, and store
+the necessary access and refresh tokens in the config file you specify.
 
-This does what `davmail` does when an authorization is needed, like this:
+For example:
+
 
 ```
 $ sudo systemctl stop emailproxy
-$ ./emailproxy.py --no-gui --config-file /home/localusr/src/email-oauth2-proxy/my.config --external-auth
-# Now connect from mutt or fetchmail
-2022-11-09 23:44:25: Authorisation request received for email@yourcompany.com (interactive mode)
+
+$ python3 ./emailproxy.py --external-auth --no-gui --config-file /home/localuser/src/email-oauth2-proxy/my.config
+
+# Now connect from mutt or fetchmail.
+
+Authorisation request received for email@yourcompany.com (external auth mode)
+Email OAuth 2.0 Proxy No-GUI external auth mode: please authorise a request for account email@yourcompany.com
 Please visit the following URL to authenticate account email@yourcompany.com: https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=...
-Please paste the full resulting redirection URL:
-# ...
-2022-11-09 23:44:42: SMTP (localhost:1587; email@yourcompany.com) [ Successfully authenticated SMTP connection - releasing session ]
+
+Copy+paste or press [↵ Return] to visit the following URL and authenticate account email@yourcompany.com: https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=...
+then paste here the full post-authentication URL from the browser's address bar (it should start with https://login.microsoftonline.com/common/oauth2/nativeclient):
+
+# Paste the updated URL bar contents from your browser in response:
+
+https://login.microsoftonline.com/common/oauth2/nativeclient?code=...
+
+SMTP (localhost:1587; email@yourcompany.com) [ Successfully authenticated SMTP connection - releasing session ]
 ^C
 $ sudo systemctl start emailproxy
 ```
 
 Obviously, you'll need to do this interactively from the terminal, then restart
 in daemon mode.
-
-So far this is working well for me, but it's certainly ugly. I wish there a
-better way to do this...
