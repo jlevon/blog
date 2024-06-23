@@ -1,7 +1,6 @@
 ---
 title: "It's Always DNS"
 date: 2024-03-29T15:15:40Z
-draft: true
 ---
 
 The meme is real, but I think this particular case is sort of interesting,
