@@ -73,6 +73,8 @@ Description=Email OAuth 2.0 Proxy
 [Service]
 ExecStart=/usr/bin/python3 /home/localuser/src/email-oauth2-proxy/emailproxy.py --external-auth --no-gui --config-file /home/localuser/src/email-oauth2-proxy/my.config
 Restart=always
+User=joebloggs
+Group=joebloggs
 
 [Install]
 WantedBy=multi-user.target
