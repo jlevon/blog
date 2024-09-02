@@ -119,3 +119,8 @@ $ sudo systemctl start emailproxy
 
 Obviously, you'll need to do this interactively from the terminal, then restart
 in daemon mode.
+
+# email-oauth2-proxy
+
+If you find the above details useful, consider [donating to support Simon's
+sterling work on oauth2-email-proxy](https://github.com/sponsors/simonrob).
