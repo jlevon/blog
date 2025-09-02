@@ -1,0 +1,70 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:141.0) Gecko/20100101 Firefox/141.0" version="28.1.2">
+  <diagram name="Page-1" id="QLctNXkrszWB_Fz2Id1d">
+    <mxGraphModel dx="1266" dy="687" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="nQX1OBV9olwww65JQEtd-22" value="" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;direction=west;fillColor=#dae8fc;strokeColor=#6c8ebf;gradientColor=#F19C99;" vertex="1" parent="1">
+          <mxGeometry x="40" y="60" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="nQX1OBV9olwww65JQEtd-1" value="qemu" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="40" y="207" width="150" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="nQX1OBV9olwww65JQEtd-2" value="guest vm" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nQX1OBV9olwww65JQEtd-3" value="/dev/nvme0" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#f8cecc;strokeColor=#b85450;gradientColor=#ea6b66;" vertex="1" parent="1">
+          <mxGeometry x="55" y="60" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="nQX1OBV9olwww65JQEtd-4" value="&lt;div&gt;vfio-user&lt;/div&gt;&lt;div&gt;client&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=middle;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="55" y="310" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nQX1OBV9olwww65JQEtd-5" value="SPDK" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="342.5" y="210" width="130" height="177" as="geometry" />
+        </mxCell>
+        <mxCell id="nQX1OBV9olwww65JQEtd-6" value="libvfio-user" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=middle;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="350" y="310" width="115" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nQX1OBV9olwww65JQEtd-17" value="vm exits" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="nQX1OBV9olwww65JQEtd-8" target="nQX1OBV9olwww65JQEtd-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="230" y="190" as="sourcePoint" />
+            <mxPoint x="100" y="640" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nQX1OBV9olwww65JQEtd-8" value="KVM" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="60" y="120" width="110" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="nQX1OBV9olwww65JQEtd-10" value="guest memory" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=middle;fillColor=#60a917;fontColor=#ffffff;strokeColor=#2D7600;" vertex="1" parent="1">
+          <mxGeometry x="55" y="240" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nQX1OBV9olwww65JQEtd-15" value="&lt;div&gt;shared&lt;/div&gt;&lt;div&gt;memory&lt;/div&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;startArrow=classic;startFill=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="nQX1OBV9olwww65JQEtd-10" target="nQX1OBV9olwww65JQEtd-6">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340" y="545" as="sourcePoint" />
+            <mxPoint x="650" y="470" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="260" y="270" />
+              <mxPoint x="260" y="340" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nQX1OBV9olwww65JQEtd-16" value="&lt;div&gt;irqfd,&lt;/div&gt;&lt;div&gt;ioeventfd&lt;/div&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" edge="1" parent="1" source="nQX1OBV9olwww65JQEtd-8" target="nQX1OBV9olwww65JQEtd-6">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="400" y="455" as="sourcePoint" />
+            <mxPoint x="555" y="420" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="300" y="135" />
+              <mxPoint x="300" y="325" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nQX1OBV9olwww65JQEtd-14" value="&lt;div&gt;vfio-user&lt;/div&gt;&lt;div&gt;protocol&lt;/div&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" edge="1" parent="1" source="nQX1OBV9olwww65JQEtd-4" target="nQX1OBV9olwww65JQEtd-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="nQX1OBV9olwww65JQEtd-20" value="&lt;div&gt;NVMe&lt;/div&gt;&lt;div&gt;controller&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=middle;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="350" y="240" width="115" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
